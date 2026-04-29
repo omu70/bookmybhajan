@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/ui/Logo';
 
 /**
  * Navbar — minimal. Brand mark + brand name, "All shows" link, mobile drawer.
@@ -31,11 +32,8 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:h-[72px] sm:px-6 lg:px-8">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <DiyaMark />
-          <span className="text-base font-bold tracking-tight text-text-primary sm:text-lg">
-            bookmy<span className="text-saffron-700">bhajan</span>
-          </span>
+        <Link href="/" aria-label="bookmybhajan home">
+          <Logo size="md" />
         </Link>
 
         {/* Desktop links */}
@@ -85,11 +83,3 @@ export function Navbar() {
   );
 }
 
-function DiyaMark() {
-  return (
-    <span className="relative inline-flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-saffron-400 via-saffron-500 to-saffron-700">
-      <span className="absolute -top-1 left-1/2 h-2 w-1 -translate-x-1/2 rounded-full bg-saffron-200 animate-flame-flicker" />
-      <span className="block size-1.5 rounded-full bg-cream-50" />
-    </span>
-  );
-}

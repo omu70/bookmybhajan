@@ -37,15 +37,9 @@
     overflow-x: hidden;
   }
 
-  /* Display headlines — Fraunces with optical sizing for big sizes */
+  /* Display headlines — Fraunces ss01 alt set */
   h1, h2, .font-display {
     font-feature-settings: "ss01", "ss02";
-    font-variation-settings: "opsz" 144, "SOFT" 50;
-  }
-
-  /* Tighter optical-size for smaller display text */
-  h3, h4 {
-    font-variation-settings: "opsz" 36, "SOFT" 50;
   }
 
   /* Selection in saffron — devotional warmth */

@@ -23,7 +23,6 @@ const display = Fraunces({
   display: 'swap',
   variable: '--font-display',
   weight: ['500', '600', '700', '800', '900'],
-  axes: ['SOFT', 'opsz'],
   preload: true,
 });
 
