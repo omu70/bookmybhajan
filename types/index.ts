@@ -1,5 +1,15 @@
 // ─── DOMAIN TYPES ──────────────────────────────────────────
-export type City = 'Delhi' | 'Mumbai' | 'Bangalore' | 'Goa' | 'Chennai' | 'Kolkata';
+export type City =
+  | 'Mumbai'
+  | 'Pune'
+  | 'Ahmedabad'
+  | 'Surat'
+  | 'Delhi'
+  | 'Bangalore'
+  | 'Hyderabad'
+  | 'Chennai'
+  | 'Kolkata'
+  | 'Goa';
 
 export type Tier = 'silver' | 'gold' | 'diamond';
 

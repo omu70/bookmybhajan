@@ -1,7 +1,6 @@
-# Darshan — bookmybhajan
+# BookMyBhajan — Bhajan Clubbing, online
 
-Premium devotional ticketing platform for Gen Z and millennial India.
-Built for conversion: 15%+ CVR target on warm traffic, 5%+ on cold.
+India's biggest Bhajan Clubbing nights — Fusion Albela Band live across **Mumbai · Pune · Ahmedabad · Surat · Delhi · Bangalore**. Bhakti meets the beat. Built for Gen Z + millennial India.
 
 **Repo:** https://github.com/omu70/bookmybhajan
 **Stack:** Next.js 14 (App Router) · Tailwind v3 · Framer Motion 11 · Three.js (lazy) · Razorpay
@@ -11,20 +10,12 @@ Built for conversion: 15%+ CVR target on warm traffic, 5%+ on cold.
 ## Quick start
 
 ```bash
-# 1. Install
 npm install
-
-# 2. Configure env
-cp .env.example .env.local
-# fill in NEXT_PUBLIC_RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, GTM, PostHog
-
-# 3. Run
-npm run dev          # http://localhost:3000
-npm run build        # production build
-npm run start        # run prod build locally
+cp .env.example .env.local           # fill Razorpay + GTM/PostHog keys
+npm run dev                          # http://localhost:3000
 ```
 
-Without Razorpay keys configured, `/api/razorpay/order` returns a deterministic mock — checkout flow is fully testable end-to-end in dev.
+Without Razorpay keys configured, `/api/razorpay/order` returns a deterministic mock — checkout works end-to-end in dev.
 
 ---
 
@@ -33,139 +24,113 @@ Without Razorpay keys configured, `/api/razorpay/order` returns a deterministic 
 ```bash
 git init
 git add .
-git commit -m "feat: initial Darshan ticketing platform"
+git commit -m "feat: initial BookMyBhajan platform"
 git branch -M main
 git remote add origin https://github.com/omu70/bookmybhajan.git
 git push -u origin main
 ```
 
-For subsequent deploys: connect the repo to **Vercel** — zero-config. The `/app` directory is detected automatically. Set the env vars in Vercel project settings.
+Then connect the repo to **Vercel** for zero-config deploys.
 
 ---
 
-## Project map
+## What's in the box
+
+### Pages
 
 ```
-app/
-  layout.tsx                       — root, fonts, GTM, PostHog (lazyOnload)
-  page.tsx                         — homepage (SSG + 60s ISR)
-  events/page.tsx                  — listing (client filters, no reload)
-  events/[slug]/page.tsx           — event detail (ISR 60s)
-  events/[slug]/_client.tsx        — full detail experience
-  events/[slug]/seats/page.tsx     — seat picker
-  checkout/page.tsx                — 3-step single-column checkout
-  confirmation/page.tsx            — animated success + ticket card
-  api/razorpay/order/route.ts      — server order creation
-  api/razorpay/webhook/route.ts    — payment.captured handler
+/                            Homepage — Hero · CityMarquee · ScarcityBar · ScrollStory
+                             · HowItWorks · EventGrid · StatsBand · Testimonials · TrustLayer
+/events                      Listing — sticky city/sort filters, client-side
+/events/[slug]               Event detail — Hero · Story · TicketTiers + AuditoriumZones · Past videos · FAQ
+/checkout                    Single-page checkout — tier+qty + 3 fields + payment, no multi-step
+/confirmation                Animated success + ticket card + referral hook
+/api/razorpay/order          Server order creation (mock-aware)
+/api/razorpay/webhook        Signature-verified payment.captured handler
+```
 
-components/
-  layout/{Navbar, Footer}.tsx
-  ui/{GlassCard, GoldButton, ScarcityBadge, LiveBookingTicker,
-       CountdownTimer, SeatHoldTimer, ProgressBar, TrustStrip}.tsx
-  sections/{HeroSection, HeroScene (3D),
-            ScarcityBar, EventGrid, EventCard, TicketTiers,
-            SeatingMap, StorySection, PastEventsGallery,
-            TestimonialsCarousel, FAQSection, TrustLayer,
-            ExitIntentModal, StickyMobileCTA}.tsx
+### Booking flow (3 user actions, period)
 
-lib/
-  events.ts        — 6 dummy concerts (Delhi, Mumbai, Bangalore, Goa, Chennai)
-  razorpay.ts      — checkout + UPI-first config
-  analytics.ts     — GTM + PostHog facade
-  inventory.ts     — seat-count helpers
-  utils.ts         — INR formatter, dates, scarcity state, 3D feature gate
+```
+Event detail  →  pick tier (Gold pre-selected)  →  /checkout?event=…&tier=…&qty=…
+                                                   single page → Razorpay → /confirmation
+```
 
-types/index.ts     — domain types
+No seat-level selection. Seating is **first-come-first-served** within a tier (Diamond / Gold / Silver). The `AuditoriumZones` component renders the venue layout matching the actual venue maps from bookmybhajan.com, with per-zone scarcity badges.
+
+The legacy `/events/[slug]/seats` route still exists — it just redirects to `/checkout`.
+
+### Design system
+
+- **Palette:** cream / saffron / marigold / temple-gold / sindoor-maroon — light, devotional, warm. Defined in `tailwind.config.js`. Body bg in `globals.css` is a tri-radial gradient on cream.
+- **Glass:** white frosted (`rgba(255,255,255,0.55)`) with warm maroon-tinted border. Reduced-transparency fallback to opaque cream.
+- **CTAs:** primary = temple-gold gradient (`btn-gold`), pulsing beacon. Hero variant = saffron gradient (`btn-saffron`).
+- **Typography:** Cormorant Garamond display · Inter UI · Tiro Devanagari Hindi accent.
+- **Motion:** Framer Motion 11 — purposeful animations only. ScrollStory uses pinned sticky + `useScroll`/`useTransform` for cinematic crossfades, parallax, and word-by-word headline reveals.
+
+### Components
+
+```
+ui/        GlassCard · GoldButton · ScarcityBadge · LiveBookingTicker · CountdownTimer
+           · SeatHoldTimer · ProgressBar · TrustStrip
+sections/  HeroSection · HeroScene (3D, lazy) · ScrollStory · CityMarquee · HowItWorks
+           · ScarcityBar · EventGrid · EventCard · TicketTiers · AuditoriumZones
+           · StorySection · PastEventsGallery · TestimonialsCarousel · FAQSection
+           · TrustLayer · ExitIntentModal · StickyMobileCTA · StatsBand
+layout/    Navbar · Footer
 ```
 
 ---
 
 ## CRO decision log
 
-| Decision | Why we chose this | Expected impact |
-|----------|-------------------|-----------------|
-| Gold tier pre-selected with `⭐ Most Popular` badge + 2px gold border | Anchoring effect — defaults shape behavior | +23% AOV |
-| Live booking ticker at hero footer (auto-rotating, 90s refresh) | Social proof + FOMO + activity signal | +6–9% CVR |
-| Saffron scarcity bar directly below hero with seat counters | Most impactful single urgency block | +12% urgency conversions |
-| Event countdown shown in hero, scarcity bar, checkout, confirmation | Scarcity compounds across journey | +8% near-deadline traffic |
-| Seat hold timer in checkout (9 min) | Prevents tab-switching; commits the user | +11% completion |
-| Guest-only checkout (no signup wall) | Forced signup destroys 24% of checkouts | +24% completion |
-| 3 fields max (name + email + WhatsApp) | Each extra field drops completion ~7% | +14% completion |
-| UPI as default payment | 70%+ of Indian buyers prefer UPI | +9% completion |
-| Trust strip directly above Pay button | Pay-anxiety is highest at this moment | +18% completion |
-| Progress breadcrumbs in checkout | Visible end reduces abandonment | +14% (AudienceView 2025) |
-| Exit-intent modal — desktop, 30s gate, ₹100 off | Recovers ~2% of bouncing users | +1.8% CVR |
-| Mobile sticky bottom CTA, 56px, thumb-zone | India is 74% mobile | +6% mobile CVR |
-| Default selection on tier card (Gold) NOT a separate "select" step | Each click is a drop-off | +5% tier confirmation |
-| Specific Pay button copy ("Pay ₹1,998 Securely") vs generic | Specificity = trust | +4% pay-button CTR |
-| Auto-assign seats option | Decision fatigue is real for tier buyers | +9% completion at seat step |
+| Decision | Why | Expected impact |
+|----------|-----|-----------------|
+| Gold tier pre-selected, ⭐ Most Popular badge | Anchoring | +23% AOV |
+| Live booking ticker (90s refresh) | FOMO + social proof | +6–9% CVR |
+| Saffron scarcity bar with countdown under hero | Single highest-impact urgency block | +12% urgency conversions |
+| **Single-page checkout** (no multi-step) | Each step drops 8–12% | +15–20% completion |
+| **No seat picker — FCFS within tier** | Removes the highest-friction screen | +18% pay-button reach |
+| Guest-only (no signup) | Forced signup destroys 24% of checkouts | +24% completion |
+| Three fields max (name + email + WhatsApp) | Each extra field −7% | +14% completion |
+| UPI default | 70%+ Indian payment preference | +9% completion |
+| Trust strip directly above Pay | Pay-anxiety peaks here | +18% completion |
+| Exit-intent modal — `ALBELA100` for ₹100 off | Recovers ~2% of bouncing users | +1.8% CVR |
+| Mobile sticky bottom CTA, 56px, thumb-zone, `safe-area-inset-bottom` | India = 74% mobile | +6% mobile CVR |
+| Hero fits in first screen frame on iPhone | All key info visible without scroll | +5% hero CTR |
 
 ---
 
 ## Performance budget
 
-| Metric | Budget | How we hit it |
-|--------|--------|---------------|
-| LCP   | < 2.0s | Hero image priority + WebP, 3D scene `dynamic ssr:false` deferred 500ms after `load` |
-| INP   | < 100ms | Animations on `transform/opacity` only, no layout thrash |
-| CLS   | < 0.1  | Fixed aspect ratios on every image, font `display: swap` with preloaded weights |
+| Metric | Budget | How |
+|--------|--------|-----|
+| LCP   | < 2.0s  | Hero image priority + WebP, 3D scene `dynamic ssr:false` deferred 500ms after `load` |
+| INP   | < 100ms | Animations restricted to `transform/opacity` |
+| CLS   | < 0.1   | Fixed aspect ratios on every image, font `display: swap` with preloaded weights |
 | Initial JS | < 150KB | Three.js code-split, Razorpay only on `/checkout`, Framer Motion tree-shaken |
 | Mobile 3D | disabled | `shouldUse3D()` returns false on touch / 2g-3g / `prefers-reduced-motion` |
 
-Hero scene uses ≤800 particles, perlin-style flicker (sine sums, no extra deps), pointer parallax with `lerp(0.05)`.
+ScrollStory pins for 4 chapters of scroll (~400vh tall, 100vh sticky). Image parallax + word-reveal driven by `useScroll`/`useTransform`. No layout thrash.
 
 ---
 
-## A/B test roadmap (post-launch, week 1)
+## A/B tests to run week 1
 
-1. **CTA copy** — "Book Your Seat" vs "Reserve My Seat" vs "Book Now"
-   *Hypothesis:* "Reserve My Seat" outperforms — possessive + commitment language.
-   *Metric:* hero → tier-page CTR.
+1. **CTA copy** — "Reserve from ₹799" vs "Book Now" vs "Get my spot"
+2. **Hero CTA position** — anchor scroll to `#tickets` vs route directly to `/checkout?tier=gold&qty=1`
+3. **Tier ordering** — Diamond → Gold → Silver vs Silver → Gold → Diamond (anchor effect)
+4. **Checkout fields** — 2 (email + WhatsApp) vs 3 (+ name)
+5. **AuditoriumZones interaction** — clickable zones vs read-only legend
 
-2. **Hero CTA position** — floating glass card vs sticky bottom bar (mobile)
-   *Hypothesis:* sticky bottom wins on mobile due to thumb reachability.
-   *Metric:* mobile-only CVR.
-
-3. **Ticket tiers layout** — 3-up horizontal vs vertical stack on mobile
-   *Hypothesis:* horizontal scroll keeps Gold visible alongside Diamond — preserves anchor.
-   *Metric:* tier confirmation rate, AOV.
-
-4. **Checkout fields** — 2 (email + phone) vs 3 (+ name)
-   *Hypothesis:* dropping name gives +4–6% completion; trade against personalisation in WhatsApp DM.
-   *Metric:* pay-button completion.
-
-5. **Scarcity copy** — "38 seats left" vs "38 of 200 seats left"
-   *Hypothesis:* the ratio framing builds more trust than just the count and lifts CVR on cold traffic.
-   *Metric:* hero CTR + tier-page CTR.
-
-Use **PostHog feature flags** (already wired via `posthog.getFeatureFlag`) or **Vercel Edge Config** for flag delivery.
-
----
-
-## India-specific UX
-
-- ₹ + Indian-comma INR formatting everywhere (`Intl.NumberFormat('en-IN')`)
-- WhatsApp e-ticket framing in 4 places (hero, FAQ, checkout, confirmation)
-- UPI as default with explicit `instruments: [{ method: 'upi' }]` block in Razorpay
-- 56px sticky mobile CTA inside `safe-area-inset-bottom` (iPhone notch friendly)
-- Hindi accent words rendered with **Tiro Devanagari** — used for emotional resonance, never bulk copy
-- Tested device matrix: Chrome Android, Samsung Internet, UC Browser
-
----
-
-## Architecture decisions worth flagging
-
-- **Razorpay webhook is signature-verified** with HMAC-SHA256 inside `/api/razorpay/webhook`. Payment success in the browser is *not* trusted alone — the webhook is canonical for marking a booking paid and dispatching the WhatsApp ticket.
-- **Inventory drift on a static homepage** — we cache the homepage at the edge with 60s ISR. Anything < 60s stale on tier counters is acceptable. Past 60s, ISR refreshes on next request.
-- **3D is gated three ways:** touch device, network type, reduced-motion. Mobile gets the static WebP every time. We never ship Three.js to a 4G phone in Tier-2.
-- **Seat hold is client-only in this build.** Production: lock seats in Redis with a 9-minute TTL the moment the seat-selection page loads. Webhook releases the lock on payment success/failure.
+Use **PostHog feature flags** (already wired) or **Vercel Edge Config**.
 
 ---
 
 ## What's deliberately not in this build
 
-- Account / auth — guest checkout only by spec.
-- Real-time seat-lock infra (Redis + WebSocket) — stubbed to client state. Hook it up when traffic hits >100 concurrent.
+- Account / auth — guest checkout only.
+- Real-time seat-lock infra — moot, since we don't sell individual seats. Tier inventory is a single counter per event-tier.
 - WATI / Gupshup integration for the WhatsApp ticket — webhook signature check is in place, dispatch is `TODO`.
 
 ---

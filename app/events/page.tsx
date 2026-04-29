@@ -8,7 +8,7 @@ import { EVENTS } from '@/lib/events';
 import { ChevronDown, Loader2, MapPin, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const CITIES = ['All', 'Delhi', 'Mumbai', 'Bangalore', 'Goa', 'Chennai'] as const;
+const CITIES = ['All', 'Mumbai', 'Pune', 'Ahmedabad', 'Surat', 'Delhi', 'Bangalore'] as const;
 const SORTS = [
   { id: 'soon', label: 'Happening soon' },
   { id: 'popular', label: 'Most popular' },
@@ -58,18 +58,19 @@ function EventListingInner() {
     <div className="pt-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <p className="eyebrow">All sacred events</p>
+          <p className="eyebrow">All Bhajan Clubbing nights</p>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">
-            Find your evening
+            Find your night.
           </h1>
           <p className="mt-2 max-w-2xl text-text-muted">
-            6 upcoming events across 5 cities. Filter, sort, and book — your seat in three clicks.
+            6 cities. 6 Saturdays. The Fusion Albela Band live in your city.
+            Filter by city, sort by what&apos;s next, book in 60 seconds.
           </p>
         </header>
       </div>
 
       {/* Sticky filter bar */}
-      <div className="sticky top-[72px] z-20 border-y border-white/5 bg-ink-900/70 backdrop-blur-glass">
+      <div className="sticky top-[72px] z-20 border-y border-maroon-900/10 bg-cream-50/82 backdrop-blur-glass shadow-glass">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
           {/* City chips */}
           <div className="no-scrollbar -mx-1 flex flex-1 items-center gap-2 overflow-x-auto px-1">
@@ -101,7 +102,7 @@ function EventListingInner() {
                 aria-label="Sort events"
               >
                 {SORTS.map((s) => (
-                  <option key={s.id} value={s.id} className="bg-ink-900">
+                  <option key={s.id} value={s.id} className="bg-cream-50 text-text-primary">
                     {s.label}
                   </option>
                 ))}

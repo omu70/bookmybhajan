@@ -13,7 +13,7 @@ else
 fi
 
 git add .
-git commit -m "feat: initial Darshan ticketing platform" || echo "→ nothing to commit"
+git commit -m "feat: initial BookMyBhajan platform" || echo "→ nothing to commit"
 
 git branch -M main
 

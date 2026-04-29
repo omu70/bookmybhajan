@@ -1,31 +1,69 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Loader2, ShieldCheck } from 'lucide-react';
+import {
+  ArrowLeft,
+  Check,
+  Loader2,
+  Minus,
+  Plus,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { GoldButton } from '@/components/ui/GoldButton';
-import { ProgressBar, type Step } from '@/components/ui/ProgressBar';
-import { SeatHoldTimer } from '@/components/ui/SeatHoldTimer';
 import { TrustStrip } from '@/components/ui/TrustStrip';
 import { getEventBySlug } from '@/lib/events';
-import { formatINR, cn } from '@/lib/utils';
+import { calcConvenienceFee, formatEventDate, formatINR, cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { openRazorpay, createServerOrder } from '@/lib/razorpay';
-import type { BookingDetails, BookingDraft } from '@/types';
+import type { BookingDetails, Tier } from '@/types';
 
 const PAYMENT_METHODS = [
-  { id: 'upi', label: 'UPI', sub: 'PhonePe, GPay, Paytm' },
+  { id: 'upi', label: 'UPI', sub: 'PhonePe · GPay · Paytm' },
   { id: 'card', label: 'Card', sub: 'Credit / Debit' },
   { id: 'netbanking', label: 'Net Banking', sub: 'All major banks' },
-  { id: 'wallet', label: 'Wallets', sub: 'Paytm, Mobikwik' },
+  { id: 'wallet', label: 'Wallets', sub: 'Paytm · Mobikwik' },
 ] as const;
 
 export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center pt-28">
+          <Loader2 className="size-6 animate-spin text-saffron-500" />
+        </div>
+      }
+    >
+      <CheckoutInner />
+    </Suspense>
+  );
+}
+
+/**
+ * SINGLE-PAGE CHECKOUT
+ *
+ *   • Tier + qty come via URL params (?event=…&tier=…&qty=…)
+ *   • One column: tier summary → 3 fields → payment method → pay
+ *   • No multi-step. No seat selection (FCFS within tier).
+ *   • Total visible at top. Trust strip directly above pay.
+ *   • Field validation is inline; pay button stays disabled until valid.
+ */
+function CheckoutInner() {
   const router = useRouter();
-  const [step, setStep] = useState<Step>('details');
-  const [draft, setDraft] = useState<BookingDraft | null>(null);
+  const params = useSearchParams();
+
+  const slug = params.get('event') ?? '';
+  const initialTier = (params.get('tier') ?? 'gold') as Tier;
+  const initialQty = Math.max(1, Math.min(6, parseInt(params.get('qty') ?? '1', 10) || 1));
+
+  const event = getEventBySlug(slug);
+
+  const [tier, setTier] = useState<Tier>(initialTier);
+  const [qty, setQty] = useState(initialQty);
   const [details, setDetails] = useState<BookingDetails>({
     fullName: '',
     email: '',
@@ -37,33 +75,30 @@ export default function CheckoutPage() {
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const raw = sessionStorage.getItem('darshan-draft');
-    if (!raw) {
-      router.replace('/events');
-      return;
-    }
-    try {
-      setDraft(JSON.parse(raw));
-    } catch {
-      router.replace('/events');
-    }
-  }, [router]);
+    if (!event) router.replace('/events');
+    else trackEvent('start_checkout', { slug });
+  }, [event, router, slug]);
 
-  if (!draft) {
+  const activeTier = event?.tiers.find((t) => t.id === tier);
+
+  const totals = useMemo(() => {
+    if (!activeTier) return { subtotal: 0, fee: 0, total: 0 };
+    const subtotal = activeTier.price * qty;
+    const fee = calcConvenienceFee(subtotal);
+    return { subtotal, fee, total: subtotal + fee };
+  }, [activeTier, qty]);
+
+  if (!event || !activeTier) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="size-6 animate-spin text-gold" />
+      <div className="flex min-h-[60vh] items-center justify-center pt-28">
+        <Loader2 className="size-6 animate-spin text-saffron-500" />
       </div>
     );
   }
 
-  const event = getEventBySlug(draft.eventSlug);
-  if (!event) return null;
-
   const validate = () => {
     const e: Partial<Record<keyof BookingDetails, string>> = {};
-    if (!details.fullName.trim()) e.fullName = 'Required';
+    if (details.fullName.trim().length < 2) e.fullName = 'Required';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email)) e.email = 'Enter a valid email';
     if (!/^\+?91?[6-9]\d{9}$/.test(details.whatsapp.replace(/\s/g, '')))
       e.whatsapp = 'Enter a valid 10-digit number';
@@ -71,37 +106,56 @@ export default function CheckoutPage() {
     return Object.keys(e).length === 0;
   };
 
-  const onContinue = () => {
-    if (!validate()) return;
-    trackEvent('submit_details', { slug: draft.eventSlug });
-    setStep('pay');
-  };
+  const isFormValid =
+    details.fullName.trim().length >= 2 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email) &&
+    /^\+?91?[6-9]\d{9}$/.test(details.whatsapp.replace(/\s/g, ''));
 
   const onPay = async () => {
+    if (!validate()) return;
     setSubmitting(true);
     setPaymentError(null);
-    trackEvent('open_razorpay', { method: paymentMethod, total: draft.total });
+    trackEvent('open_razorpay', { method: paymentMethod, total: totals.total, slug });
     try {
       const order = await createServerOrder({
-        amount: draft.total,
-        receipt: `dr_${Date.now()}`,
+        amount: totals.total,
+        receipt: `bmb_${Date.now()}`,
       });
       await openRazorpay({
-        draft,
+        draft: {
+          eventSlug: slug,
+          tier,
+          quantity: qty,
+          subtotal: totals.subtotal,
+          convenienceFee: totals.fee,
+          total: totals.total,
+        },
         details,
         eventTitle: event.title,
         bookingId: order.id,
         onSuccess: (paymentId) => {
-          sessionStorage.setItem(
-            'darshan-receipt',
-            JSON.stringify({ ...draft, ...details, paymentId, bookingId: order.id })
-          );
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(
+              'bmb-receipt',
+              JSON.stringify({
+                eventSlug: slug,
+                tier,
+                quantity: qty,
+                subtotal: totals.subtotal,
+                convenienceFee: totals.fee,
+                total: totals.total,
+                ...details,
+                paymentId,
+                bookingId: order.id,
+              })
+            );
+          }
           router.push(`/confirmation?booking_id=${order.id}`);
         },
         onFailure: (err) => {
           setPaymentError(
             err?.error?.description ??
-              'Your payment may have gone through — check WhatsApp for ticket. If not, try again.'
+              'Payment did not go through. Your card was not charged. Try a different method.'
           );
           setSubmitting(false);
         },
@@ -114,203 +168,267 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="pt-24">
-      <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <Link
-            href={`/events/${event.slug}/seats`}
-            className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-primary"
-          >
-            <ArrowLeft className="size-4" /> Change seats
-          </Link>
-          <SeatHoldTimer seconds={8 * 60} />
-        </div>
-
-        {/* Progress */}
-        <div className="mb-8">
-          <ProgressBar current={step} />
-        </div>
-
-        {/* Total — always visible */}
-        <div className="mb-6 rounded-2xl border border-gold/30 bg-gold/5 p-4 text-center">
-          <p className="text-xs uppercase tracking-widest text-gold">Order total</p>
-          <p className="mt-1 font-display text-3xl font-bold tabular text-text-primary">
-            {formatINR(draft.total)}
-          </p>
-          <p className="text-xs text-text-muted">
-            {draft.quantity} × {draft.tier.toUpperCase()} · incl. fees
-          </p>
-        </div>
-
-        {/* Step 1 — ticket summary preview */}
-        <motion.section
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 rounded-2xl border border-glass-border bg-glass-surface p-5"
+    <div className="pt-24 pb-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        {/* Back link */}
+        <Link
+          href={`/events/${event.slug}`}
+          className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-primary"
         >
-          <p className="text-sm font-semibold">{event.title}</p>
-          <p className="mt-1 text-xs text-text-muted">
-            {event.venue}, {event.city}
-          </p>
-          <p className="mt-1 text-xs text-text-muted">
-            {draft.selectedSeatIds && draft.selectedSeatIds.length > 0
-              ? `Seats: ${draft.selectedSeatIds.join(', ')}`
-              : `${draft.quantity} × auto-assigned best seats`}
-          </p>
-        </motion.section>
+          <ArrowLeft className="size-4" /> Back to event
+        </Link>
 
-        {step === 'details' && (
+        <div className="mt-6 grid gap-6 md:grid-cols-5">
+          {/* ─── LEFT: form ─────────────────────────────── */}
           <motion.section
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-            aria-labelledby="details-heading"
+            transition={{ duration: 0.4 }}
+            className="md:col-span-3"
           >
-            <h2 id="details-heading" className="font-display text-2xl font-bold">
-              Your details
-            </h2>
-            <p className="text-sm text-text-muted">
-              Your e-ticket lands on WhatsApp + email within 30 seconds of payment.
+            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Reserve your spot.
+            </h1>
+            <p className="mt-2 text-sm text-text-muted">
+              Three fields. One tap to pay. WhatsApp ticket in 30 seconds.
             </p>
 
-            <Field
-              label="Full name"
-              error={errors.fullName}
-              input={
-                <input
-                  type="text"
-                  autoComplete="name"
-                  inputMode="text"
-                  value={details.fullName}
-                  onChange={(e) => setDetails((d) => ({ ...d, fullName: e.target.value }))}
-                  className="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:border-gold/60 focus:outline-none"
-                  placeholder="Rahul Sharma"
-                />
-              }
-            />
-
-            <Field
-              label="Email"
-              error={errors.email}
-              hint="For your e-ticket and refund updates"
-              input={
-                <input
-                  type="email"
-                  autoComplete="email"
-                  inputMode="email"
-                  value={details.email}
-                  onChange={(e) => setDetails((d) => ({ ...d, email: e.target.value }))}
-                  className="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:border-gold/60 focus:outline-none"
-                  placeholder="rahul@example.com"
-                />
-              }
-            />
-
-            <Field
-              label="WhatsApp number"
-              error={errors.whatsapp}
-              hint="Your e-ticket will be sent here instantly"
-              input={
-                <div className="flex items-center rounded-xl border border-white/15 bg-black/30 focus-within:border-gold/60">
-                  <span className="border-r border-white/10 px-4 py-3 text-sm text-text-muted">+91</span>
-                  <input
-                    type="tel"
-                    autoComplete="tel"
-                    inputMode="tel"
-                    value={details.whatsapp}
-                    onChange={(e) =>
-                      setDetails((d) => ({ ...d, whatsapp: e.target.value.replace(/[^\d]/g, '').slice(0, 10) }))
-                    }
-                    className="w-full bg-transparent px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:outline-none"
-                    placeholder="98765 43210"
-                  />
-                </div>
-              }
-            />
-
-            <GoldButton size="xl" fullWidth onClick={onContinue}>
-              Continue to payment
-            </GoldButton>
-          </motion.section>
-        )}
-
-        {step === 'pay' && (
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-            aria-labelledby="pay-heading"
-          >
-            <h2 id="pay-heading" className="font-display text-2xl font-bold">
-              Payment method
-            </h2>
-
-            <div className="grid grid-cols-2 gap-3">
-              {PAYMENT_METHODS.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setPaymentMethod(m.id)}
-                  className={cn(
-                    'rounded-2xl border p-4 text-left transition-all',
-                    paymentMethod === m.id
-                      ? 'border-gold bg-gold/10'
-                      : 'border-white/15 bg-glass-surface hover:border-white/30'
-                  )}
+            {/* Tier + qty inline editor */}
+            <div className="mt-6 rounded-2xl border border-glass-border bg-cream-50 p-4">
+              <div className="flex items-center justify-between">
+                <p className="eyebrow">Your selection</p>
+                <Link
+                  href={`/events/${event.slug}#tickets`}
+                  className="text-xs font-semibold text-saffron-700 hover:underline"
                 >
-                  <div className="flex items-start justify-between">
-                    <p className="font-semibold text-text-primary">{m.label}</p>
-                    {paymentMethod === m.id && (
-                      <span className="flex size-5 items-center justify-center rounded-full bg-gold text-ink-900">
-                        <Check className="size-3" strokeWidth={3} />
+                  Change
+                </Link>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <TierChips event={event} active={tier} onChange={(t) => setTier(t)} />
+              </div>
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <span className="text-xs text-text-muted">Quantity</span>
+                <div className="inline-flex items-center gap-3 rounded-full border border-maroon-900/15 bg-cream-50 px-2 py-1.5">
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
+                  >
+                    <Minus className="size-4" />
+                  </button>
+                  <span className="w-6 text-center font-bold tabular">{qty}</span>
+                  <button
+                    type="button"
+                    aria-label="Increase quantity"
+                    onClick={() => setQty((q) => Math.min(6, q + 1))}
+                    className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
+                  >
+                    <Plus className="size-4" />
+                  </button>
+                </div>
+              </div>
+              <p className="mt-3 text-[11px] text-text-muted">
+                Seating is first-come-first-served inside the {tier.toUpperCase()} area —
+                early entry = better view.
+              </p>
+            </div>
+
+            {/* Details form */}
+            <div className="mt-6 space-y-4">
+              <h2 className="font-display text-xl font-bold">Your details</h2>
+
+              <Field
+                label="Full name"
+                error={errors.fullName}
+                input={
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    inputMode="text"
+                    value={details.fullName}
+                    onChange={(e) => setDetails((d) => ({ ...d, fullName: e.target.value }))}
+                    className="w-full rounded-xl border border-maroon-900/18 bg-cream-50 px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:border-saffron-500 focus:outline-none"
+                    placeholder="Aanya Raghav"
+                  />
+                }
+              />
+
+              <Field
+                label="Email"
+                hint="Backup ticket + refund updates"
+                error={errors.email}
+                input={
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={details.email}
+                    onChange={(e) => setDetails((d) => ({ ...d, email: e.target.value }))}
+                    className="w-full rounded-xl border border-maroon-900/18 bg-cream-50 px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:border-saffron-500 focus:outline-none"
+                    placeholder="aanya@example.com"
+                  />
+                }
+              />
+
+              <Field
+                label="WhatsApp number"
+                hint="QR e-ticket lands here in 30s"
+                error={errors.whatsapp}
+                input={
+                  <div className="flex items-center rounded-xl border border-maroon-900/18 bg-cream-50 focus-within:border-saffron-500">
+                    <span className="border-r border-maroon-900/15 px-4 py-3 text-sm text-text-muted">+91</span>
+                    <input
+                      type="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      value={details.whatsapp}
+                      onChange={(e) =>
+                        setDetails((d) => ({
+                          ...d,
+                          whatsapp: e.target.value.replace(/[^\d]/g, '').slice(0, 10),
+                        }))
+                      }
+                      className="w-full bg-transparent px-4 py-3 text-base text-text-primary placeholder:text-text-subtle focus:outline-none"
+                      placeholder="98765 43210"
+                    />
+                  </div>
+                }
+              />
+            </div>
+
+            {/* Payment method */}
+            <div className="mt-8">
+              <h2 className="font-display text-xl font-bold">Payment method</h2>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {PAYMENT_METHODS.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setPaymentMethod(m.id)}
+                    className={cn(
+                      'rounded-2xl border p-3 text-left transition-all',
+                      paymentMethod === m.id
+                        ? 'border-saffron-500 bg-saffron-50 shadow-saffron-glow'
+                        : 'border-maroon-900/15 bg-cream-50 hover:border-saffron-500/40'
+                    )}
+                  >
+                    <div className="flex items-start justify-between">
+                      <p className="text-sm font-bold text-text-primary">{m.label}</p>
+                      {paymentMethod === m.id && (
+                        <span className="flex size-5 items-center justify-center rounded-full bg-saffron-500 text-white">
+                          <Check className="size-3" strokeWidth={3} />
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 text-[11px] text-text-muted">{m.sub}</p>
+                    {m.id === 'upi' && (
+                      <span className="mt-1.5 inline-block rounded-full bg-saffron-grad px-2 py-0.5 text-[9px] font-bold text-white">
+                        Recommended
                       </span>
                     )}
-                  </div>
-                  <p className="mt-1 text-xs text-text-muted">{m.sub}</p>
-                  {m.id === 'upi' && (
-                    <span className="mt-2 inline-block rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold text-gold">
-                      Recommended
-                    </span>
-                  )}
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {paymentError && (
-              <p className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-sm text-rose-200">
+              <p className="mt-4 rounded-xl border border-rose-400/40 bg-rose-50 p-3 text-sm text-rose-800">
                 {paymentError}
               </p>
             )}
 
-            {/* Trust signals — DIRECTLY above pay */}
-            <div className="rounded-2xl border border-glass-border bg-glass-surface p-4">
+            {/* Trust strip — directly above pay */}
+            <div className="mt-6 rounded-2xl border border-glass-border bg-cream-50 p-4">
               <TrustStrip />
               <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-text-muted">
-                <ShieldCheck className="size-3.5 text-gold" />
+                <ShieldCheck className="size-3.5 text-saffron-600" />
                 Razorpay · 256-bit SSL · PCI-DSS compliant · 7-day refund window
               </p>
             </div>
 
-            <GoldButton size="xl" fullWidth onClick={onPay} disabled={submitting}>
-              {submitting ? (
-                <span className="inline-flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin" /> Opening Razorpay…
-                </span>
-              ) : (
-                <>Pay {formatINR(draft.total)} Securely</>
-              )}
-            </GoldButton>
-
-            <p className="text-center text-[11px] text-text-muted">
-              By continuing you agree to our refund and privacy policies.
-            </p>
+            {/* CTA */}
+            <div className="mt-5">
+              <GoldButton
+                size="xl"
+                fullWidth
+                onClick={onPay}
+                disabled={submitting || !isFormValid}
+              >
+                {submitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="size-4 animate-spin" /> Opening Razorpay…
+                  </span>
+                ) : (
+                  <>Pay {formatINR(totals.total)} securely</>
+                )}
+              </GoldButton>
+              <p className="mt-3 text-center text-[11px] text-text-muted">
+                Tap pay → Razorpay opens → done in 20 seconds.
+              </p>
+            </div>
           </motion.section>
-        )}
+
+          {/* ─── RIGHT: order summary (sticky on desktop) ── */}
+          <aside className="md:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="md:sticky md:top-28"
+            >
+              <div className="overflow-hidden rounded-3xl border border-saffron-500/30 bg-cream-50 shadow-card-hover">
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src={event.heroImage}
+                    alt={event.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/80 to-transparent" />
+                  <div className="absolute inset-x-3 bottom-3">
+                    <p className="text-[10px] uppercase tracking-widest text-saffron-200">
+                      You&apos;re booking
+                    </p>
+                    <p className="font-display text-lg font-bold leading-tight text-cream-50">
+                      {event.title}
+                    </p>
+                    <p className="text-xs text-cream-100/85">
+                      {event.venue} · {formatEventDate(event.date)} · {event.startTime}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-3 p-5 text-sm tabular">
+                  <Row label={`${activeTier.name} × ${qty}`} value={formatINR(totals.subtotal)} />
+                  <Row
+                    label="Convenience fee"
+                    value={formatINR(totals.fee)}
+                    hint="Razorpay processing"
+                  />
+                  <div className="flex items-center justify-between border-t border-maroon-900/10 pt-3">
+                    <span className="text-base font-semibold text-text-primary">Total</span>
+                    <span className="font-display text-3xl font-bold text-saffron-700">
+                      {formatINR(totals.total)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-text-muted">
+                <Sparkles className="size-3.5 text-saffron-500" />
+                {activeTier.seatsRemaining} seats remaining in {activeTier.name}
+              </p>
+            </motion.div>
+          </aside>
+        </div>
       </div>
     </div>
   );
 }
 
+// ─── helpers ────────────────────────────────────────────
 function Field({
   label,
   hint,
@@ -329,7 +447,58 @@ function Field({
         <span className="ml-1 text-xs text-text-muted">— {hint}</span>
       )}
       <div className="mt-1.5">{input}</div>
-      {error && <span className="mt-1 block text-xs text-rose-300">{error}</span>}
+      {error && <span className="mt-1 block text-xs text-rose-600">{error}</span>}
     </label>
+  );
+}
+
+function TierChips({
+  event,
+  active,
+  onChange,
+}: {
+  event: ReturnType<typeof getEventBySlug>;
+  active: Tier;
+  onChange: (t: Tier) => void;
+}) {
+  if (!event) return null;
+  return (
+    <div className="flex flex-wrap gap-2">
+      {event.tiers.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          onClick={() => onChange(t.id)}
+          className={cn(
+            'rounded-full border px-3 py-1.5 text-xs font-bold transition-all',
+            active === t.id
+              ? 'border-saffron-500 bg-saffron-50 text-saffron-700'
+              : 'border-maroon-900/15 bg-cream-50 text-text-muted hover:border-saffron-500/40'
+          )}
+        >
+          {t.name} · {formatINR(t.price)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Row({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-text-muted">
+        {label}
+        {hint && <span className="ml-1 text-[10px] opacity-70">· {hint}</span>}
+      </span>
+      <span className="font-semibold text-text-primary">{value}</span>
+    </div>
   );
 }

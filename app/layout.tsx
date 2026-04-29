@@ -31,20 +31,20 @@ const tiro = Tiro_Devanagari_Hindi({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://darshan.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bookmybhajan.com'),
   title: {
-    default: 'Darshan — Devotional Tickets, Booked in Seconds',
-    template: '%s · Darshan',
+    default: 'BookMyBhajan — India\'s Biggest Bhajan Clubbing nights',
+    template: '%s · BookMyBhajan',
   },
   description:
-    'India\'s most trusted devotional ticketing platform. Bhajans, kirtans, jagrans across Delhi, Mumbai, Bangalore, Goa & Chennai. WhatsApp e-ticket. Razorpay-secure.',
-  keywords: ['bhajan tickets', 'kirtan tickets', 'devotional events', 'darshan', 'jagran', 'mahayagna'],
+    'Bhakti meets the beat. Fusion Albela Band live across Mumbai, Pune, Ahmedabad, Surat, Delhi & Bangalore. Tickets from ₹299. WhatsApp e-ticket. Razorpay-secure.',
+  keywords: ['bhajan clubbing', 'fusion albela band', 'bhajan tickets', 'kirtan tickets', 'bookmybhajan', 'devotional concert india'],
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    siteName: 'Darshan',
-    title: 'Darshan — Devotional Tickets, Booked in Seconds',
-    description: 'Bhajans, kirtans, jagrans across India. WhatsApp e-ticket. Razorpay-secure.',
+    siteName: 'BookMyBhajan',
+    title: 'BookMyBhajan — Bhakti meets the beat',
+    description: 'Fusion Albela Band live across 6 Indian cities. Tickets from ₹299.',
   },
   twitter: { card: 'summary_large_image' },
 };

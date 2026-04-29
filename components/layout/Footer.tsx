@@ -17,15 +17,15 @@ export function Footer() {
   };
 
   return (
-    <footer className="mt-24 border-t border-white/5 bg-ink-900/60 backdrop-blur-glassLo">
+    <footer className="mt-24 border-t border-maroon-900/8 bg-cream-100/70 backdrop-blur-glassLo">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-4">
           {/* Brand + WhatsApp opt-in */}
           <div className="md:col-span-2">
-            <p className="font-display text-2xl font-bold">Darshan</p>
+            <p className="font-display text-2xl font-bold">BookMyBhajan</p>
             <p className="mt-2 max-w-md text-sm text-text-muted">
-              India&apos;s most trusted devotional ticketing platform. Bhajans, kirtans,
-              jagrans — booked in seconds, delivered to your WhatsApp.
+              India&apos;s biggest Bhajan Clubbing nights. Fusion Albela Band live across six cities.
+              Bhakti meets the beat — booked in seconds, delivered to your WhatsApp.
             </p>
 
             {!done ? (
@@ -44,7 +44,7 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-bold text-ink-900 hover:brightness-110"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-gold-grad px-4 py-2 text-xs font-bold text-text-primary shadow-gold-glow-lg hover:brightness-110"
                 >
                   <Send className="size-3.5" />
                   Subscribe
@@ -61,11 +61,12 @@ export function Footer() {
             title="Explore"
             links={[
               { label: 'All events', href: '/events' },
-              { label: 'Delhi', href: '/events?city=Delhi' },
               { label: 'Mumbai', href: '/events?city=Mumbai' },
+              { label: 'Pune', href: '/events?city=Pune' },
+              { label: 'Ahmedabad', href: '/events?city=Ahmedabad' },
+              { label: 'Surat', href: '/events?city=Surat' },
+              { label: 'Delhi', href: '/events?city=Delhi' },
               { label: 'Bangalore', href: '/events?city=Bangalore' },
-              { label: 'Chennai', href: '/events?city=Chennai' },
-              { label: 'Goa', href: '/events?city=Goa' },
             ]}
           />
 
@@ -80,9 +81,9 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-10 flex flex-col items-start gap-4 border-t border-white/5 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col items-start gap-4 border-t border-maroon-900/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-text-muted">
-            © {new Date().getFullYear()} Darshan Tickets · Made with bhakti in Bharat
+            © {new Date().getFullYear()} BookMyBhajan · Bhakti meets the beat · Made in Bharat
           </p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-muted">
             <span className="inline-flex items-center gap-1.5"><Lock className="size-3.5 text-gold" /> 100% Secure</span>

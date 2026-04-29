@@ -31,7 +31,7 @@ export function Navbar() {
       className={cn(
         'fixed inset-x-0 top-0 z-40 transition-colors duration-300',
         scrolled
-          ? 'bg-ink-900/60 backdrop-blur-glass border-b border-white/5'
+          ? 'bg-cream-50/82 backdrop-blur-glass border-b border-maroon-900/8 shadow-glass'
           : 'bg-transparent'
       )}
     >
@@ -40,7 +40,7 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-2 group">
           <DiyaMark />
           <span className="font-display text-xl font-bold tracking-tight text-text-primary">
-            Darshan
+            BookMyBhajan
           </span>
         </Link>
 
@@ -49,14 +49,17 @@ export function Navbar() {
           <Link href="/events" className="text-sm font-medium text-text-muted hover:text-text-primary">
             All Events
           </Link>
-          <Link href="/events?city=Delhi" className="text-sm font-medium text-text-muted hover:text-text-primary">
-            Delhi
-          </Link>
           <Link href="/events?city=Mumbai" className="text-sm font-medium text-text-muted hover:text-text-primary">
             Mumbai
           </Link>
-          <Link href="/events?city=Bangalore" className="text-sm font-medium text-text-muted hover:text-text-primary">
-            Bangalore
+          <Link href="/events?city=Pune" className="text-sm font-medium text-text-muted hover:text-text-primary">
+            Pune
+          </Link>
+          <Link href="/events?city=Ahmedabad" className="text-sm font-medium text-text-muted hover:text-text-primary">
+            Ahmedabad
+          </Link>
+          <Link href="/events?city=Delhi" className="text-sm font-medium text-text-muted hover:text-text-primary">
+            Delhi
           </Link>
         </div>
 
@@ -64,7 +67,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-text-muted hover:text-text-primary md:inline-flex"
+            className="hidden items-center gap-1.5 rounded-full border border-maroon-900/15 bg-cream-50 px-3 py-1.5 text-xs text-text-muted hover:text-text-primary md:inline-flex"
           >
             <MapPin className="size-3.5" />
             Delhi
@@ -95,15 +98,16 @@ export function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="md:hidden mx-4 mt-2 rounded-2xl border border-glass-border bg-ink-800/85 backdrop-blur-glass p-4"
+          className="md:hidden mx-4 mt-2 rounded-2xl border border-glass-border bg-cream-50/95 backdrop-blur-glass p-4 shadow-glass"
         >
           <div className="flex flex-col gap-3 text-sm">
             <Link href="/events" onClick={() => setOpen(false)}>All events</Link>
-            <Link href="/events?city=Delhi" onClick={() => setOpen(false)}>Delhi</Link>
             <Link href="/events?city=Mumbai" onClick={() => setOpen(false)}>Mumbai</Link>
+            <Link href="/events?city=Pune" onClick={() => setOpen(false)}>Pune</Link>
+            <Link href="/events?city=Ahmedabad" onClick={() => setOpen(false)}>Ahmedabad</Link>
+            <Link href="/events?city=Surat" onClick={() => setOpen(false)}>Surat</Link>
+            <Link href="/events?city=Delhi" onClick={() => setOpen(false)}>Delhi</Link>
             <Link href="/events?city=Bangalore" onClick={() => setOpen(false)}>Bangalore</Link>
-            <Link href="/events?city=Chennai" onClick={() => setOpen(false)}>Chennai</Link>
-            <Link href="/events?city=Goa" onClick={() => setOpen(false)}>Goa</Link>
             <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-text-muted">
               <Lock className="size-3" /> Secure Razorpay Payments
             </span>

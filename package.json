@@ -1,8 +1,8 @@
 {
-  "name": "darshan-tickets",
+  "name": "bookmybhajan",
   "version": "1.0.0",
   "private": true,
-  "description": "Premium devotional ticketing platform — built for conversion",
+  "description": "BookMyBhajan — Bhajan Clubbing nights, Fusion Albela Band live across India",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

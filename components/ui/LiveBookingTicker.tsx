@@ -31,12 +31,12 @@ export function LiveBookingTicker() {
 
   return (
     <div
-      className="relative h-9 w-full overflow-hidden border-y border-white/5 bg-black/30 backdrop-blur-glassLo"
+      className="relative h-9 w-full overflow-hidden border-y border-maroon-900/10 bg-cream-50/85 backdrop-blur-glassLo"
       role="status"
       aria-label="Live booking activity"
     >
       {/* Live indicator */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 flex h-full items-center gap-2 bg-gradient-to-r from-ink-900 via-ink-900/95 to-transparent px-4">
+      <div className="pointer-events-none absolute left-0 top-0 z-10 flex h-full items-center gap-2 bg-gradient-to-r from-cream-50 via-cream-50/95 to-transparent px-4">
         <span className="relative flex size-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-60" />
           <span className="relative inline-flex size-2 rounded-full bg-rose-500" />

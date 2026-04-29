@@ -6,7 +6,7 @@ import { X, Gift } from 'lucide-react';
 import { GoldButton } from '@/components/ui/GoldButton';
 import { trackEvent } from '@/lib/analytics';
 
-const STORAGE_KEY = 'darshan-exit-intent-shown';
+const STORAGE_KEY = 'bmb-exit-intent-shown';
 
 /**
  * ExitIntentModal — desktop only. Triggers when:
@@ -44,7 +44,7 @@ export function ExitIntentModal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/85 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-maroon-900/55 p-4 backdrop-blur-sm"
           onClick={() => setOpen(false)}
           role="dialog"
           aria-modal="true"
@@ -56,13 +56,13 @@ export function ExitIntentModal() {
             exit={{ scale: 0.92, y: 20, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-3xl border border-glass-borderGlow bg-ink-800/95 p-8 text-center shadow-card-hover"
+            className="relative w-full max-w-md rounded-3xl border border-glass-borderGlow bg-cream-50 p-8 text-center shadow-card-hover"
           >
             <button
               type="button"
               aria-label="Close"
               onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full text-text-muted hover:bg-white/10 hover:text-text-primary"
+              className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full text-text-muted hover:bg-maroon-900/8 hover:text-text-primary"
             >
               <X className="size-4" />
             </button>
@@ -75,12 +75,12 @@ export function ExitIntentModal() {
               id="exit-intent-title"
               className="mt-5 font-display text-3xl font-bold leading-tight"
             >
-              Wait — before you go.
+              Hold on — one tap saves ₹100.
             </h3>
             <p className="mt-2 text-text-muted">
-              Get <span className="font-bold text-gold">₹100 off</span> your first booking.
-              Use code <span className="font-mono font-bold text-text-primary">DARSHAN100</span>{' '}
-              at checkout.
+              First Bhajan Clubbing? Use{' '}
+              <span className="font-mono font-bold text-text-primary">ALBELA100</span>{' '}
+              at checkout for <span className="font-bold text-saffron-700">₹100 off</span> any tier.
             </p>
 
             <div className="mt-6">
@@ -92,7 +92,7 @@ export function ExitIntentModal() {
                   document.querySelector('#tickets')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                Apply ₹100 off
+                Apply ALBELA100 — save ₹100
               </GoldButton>
             </div>
 

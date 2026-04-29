@@ -12,6 +12,10 @@ import type { DevotionalEvent, Tier } from '@/types';
 interface TicketTiersProps {
   event: DevotionalEvent;
   onProceed: (tier: Tier, quantity: number) => void;
+  /** Optional callback fired whenever the selected tier changes — lets parents (e.g. AuditoriumZones) sync. */
+  onTierChange?: (tier: Tier) => void;
+  /** Controlled value — overrides the internal default selection. */
+  value?: Tier;
 }
 
 /**
@@ -20,9 +24,10 @@ interface TicketTiersProps {
  * Cards are equal-height; perks list always shows Silver < Gold < Diamond
  * with strict +2 perk progression — visual anchoring.
  */
-export function TicketTiers({ event, onProceed }: TicketTiersProps) {
+export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTiersProps) {
   const initial: Tier = (event.tiers.find((t) => t.popular)?.id ?? 'gold') as Tier;
-  const [selected, setSelected] = useState<Tier>(initial);
+  const [internal, setInternal] = useState<Tier>(initial);
+  const selected = value ?? internal;
   const [qty, setQty] = useState(1);
 
   const tier = event.tiers.find((t) => t.id === selected)!;
@@ -30,24 +35,26 @@ export function TicketTiers({ event, onProceed }: TicketTiersProps) {
 
   const select = (id: Tier) => {
     if (id === selected) return;
-    setSelected(id);
+    setInternal(id);
+    onTierChange?.(id);
     trackEvent('select_tier', { tier: id, slug: event.slug });
   };
 
   return (
-    <section id="tickets" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mb-10 max-w-2xl">
-        <p className="eyebrow">Choose your tier</p>
+    <div>
+      <div className="mb-8 max-w-2xl">
+        <p className="eyebrow">Pick your area</p>
         <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">
-          Three ways to attend
+          Three ways to vibe.
         </h2>
         <p className="mt-3 text-text-muted">
-          Most devotees choose <span className="font-semibold text-gold">Gold</span> —
-          best center seats, priority entry, and a meet & greet token.
+          Most devotees pick <span className="font-semibold text-saffron-700">Gold</span> —
+          center stage, priority entry, and a meet-and-greet with the Albela Band.{' '}
+          <span className="text-text-strong">Seating is first-come-first-served inside each area.</span>
         </p>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-3">
         {event.tiers.map((t, i) => {
           const isSelected = selected === t.id;
           return (
@@ -122,7 +129,7 @@ export function TicketTiers({ event, onProceed }: TicketTiersProps) {
       <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-glass-border bg-glass-surface p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <p className="text-sm font-medium text-text-muted">Quantity</p>
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-black/30 px-2 py-1.5">
+          <div className="inline-flex items-center gap-3 rounded-full border border-maroon-900/15 bg-cream-50 px-2 py-1.5">
             <button
               type="button"
               aria-label="Decrease quantity"
@@ -130,7 +137,7 @@ export function TicketTiers({ event, onProceed }: TicketTiersProps) {
                 setQty((q) => Math.max(1, q - 1));
                 trackEvent('change_quantity', { dir: 'down' });
               }}
-              className="flex size-8 items-center justify-center rounded-full hover:bg-white/10"
+              className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
             >
               <Minus className="size-4" />
             </button>
@@ -142,7 +149,7 @@ export function TicketTiers({ event, onProceed }: TicketTiersProps) {
                 setQty((q) => Math.min(6, q + 1));
                 trackEvent('change_quantity', { dir: 'up' });
               }}
-              className="flex size-8 items-center justify-center rounded-full hover:bg-white/10"
+              className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
             >
               <Plus className="size-4" />
             </button>
@@ -161,10 +168,10 @@ export function TicketTiers({ event, onProceed }: TicketTiersProps) {
               onProceed(selected, qty);
             }}
           >
-            Continue
+            Reserve {tier.name}
           </GoldButton>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

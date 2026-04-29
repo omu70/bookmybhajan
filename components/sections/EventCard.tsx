@@ -48,7 +48,7 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
               loading="lazy"
               placeholder="empty"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/75 via-maroon-900/15 to-transparent" />
 
             {/* Badges row */}
             <div className="absolute left-3 top-3 flex flex-wrap gap-2">
@@ -61,7 +61,7 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
 
             {/* Hindi title — small, lower-right, decorative */}
             {event.titleHindi && (
-              <span className="absolute bottom-3 right-3 font-deva text-sm text-saffron-100/90">
+              <span className="absolute bottom-3 right-3 font-deva text-sm text-cream-50">
                 {event.titleHindi}
               </span>
             )}
@@ -87,7 +87,7 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-white/5 pt-3">
+            <div className="flex items-center justify-between border-t border-maroon-900/8 pt-3">
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-text-muted">From</p>
                 <p className="text-lg font-bold text-text-primary">
@@ -99,7 +99,7 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
             </div>
 
             {/* Mobile-visible CTA — never hide behind hover */}
-            <div className="rounded-xl bg-gold/10 px-4 py-2.5 text-center text-sm font-bold text-gold transition-all group-hover:bg-gold group-hover:text-ink-900">
+            <div className="rounded-xl bg-saffron-50 px-4 py-2.5 text-center text-sm font-bold text-saffron-700 transition-all group-hover:bg-gold-grad group-hover:text-text-primary group-hover:shadow-gold-glow-lg">
               Book Now →
             </div>
           </div>

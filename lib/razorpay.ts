@@ -55,7 +55,7 @@ export async function openRazorpay({
     key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     amount: draft.total * 100, // paise
     currency: 'INR',
-    name: 'Darshan',
+    name: 'BookMyBhajan',
     description: `${eventTitle} — ${draft.tier.toUpperCase()} × ${draft.quantity}`,
     order_id: bookingId,
     image: '/icons/logo.svg',

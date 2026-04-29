@@ -29,8 +29,8 @@ export function EventGrid({ events, heading, eyebrow, description }: EventGridPr
 
       {events.length === 0 ? (
         <div className="rounded-2xl border border-glass-border bg-glass-surface p-10 text-center">
-          <p className="text-lg font-semibold">No events yet in this city.</p>
-          <p className="mt-1 text-text-muted">Browse all events to find one near you →</p>
+          <p className="text-lg font-semibold">No nights here yet.</p>
+          <p className="mt-1 text-text-muted">Browse all cities — the Albela Band is always somewhere →</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

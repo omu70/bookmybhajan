@@ -1,400 +1,337 @@
 /**
- * MOCK EVENT INVENTORY
- * In production, this is fetched from CMS/DB via ISR (60s revalidate).
- * Today: 2026-04-29 → all events are 15+ days out (May 14 onwards).
+ * BOOKMYBHAJAN — REAL EVENT LINEUP
  *
- * 6 dummy concerts:
- *   1. Krishna Bhajan Sandhya — Delhi
- *   2. Shiv Tandav Live      — Bangalore
- *   3. Hanuman Chalisa Mahayagna — Mumbai
- *   4. Ganga Aarti Sunset    — Goa
- *   5. Devi Bhajan Jagran    — Chennai
- *   6. Ram Naam Sankirtan    — Delhi
+ * Brand: bookmybhajan.com
+ * Concept: "Bhajan Clubbing" — devotional fusion concerts with the
+ *          Fusion Albela Band as headliner. Bhakti meets club energy.
+ *          Targeted at Gen Z + millennial India.
+ *
+ * Cities currently active: Mumbai, Pune, Ahmedabad, Surat, Delhi, Bangalore.
+ * Today: 2026-04-29 → all events 15+ days out.
  */
 
 import type { DevotionalEvent, LiveBooking } from '@/types';
 
-// Stable Unsplash image URLs — temple, diya, bhakti themes
 const img = (id: string) => `https://images.unsplash.com/photo-${id}?w=1600&q=80&auto=format&fit=crop`;
+
+// Reusable cast across cities — same band, same magic
+const FUSION_ALBELA_BAND = {
+  name: 'Fusion Albela Band',
+  bio: 'India\'s loudest bhakti collective. Eight musicians. Tabla, dhol, electric sarangi, synth, vocals — bhajans you can dance to.',
+  imageUrl: img('1507003211169-0a1dd7228f2d'),
+  blessedCount: 5_60_000,
+};
+
+// Standardised pre/show timing
+const PERKS_SILVER = [
+  'General-floor seating',
+  'Welcome chai + prasad',
+  'Digital aarti songbook',
+];
+const PERKS_GOLD = [
+  'Premium center seating',
+  'Welcome chai + prasad + tilak',
+  'Hardbound aarti songbook',
+  'Priority entry (skip queue)',
+  'Meet & greet token with the band',
+];
+const PERKS_DIAMOND = [
+  'Front-row VIP seating',
+  'Brass diya keepsake',
+  'Welcome chai + prasad + tilak',
+  'VIP lounge access (pre-show)',
+  'Guaranteed band meet & greet',
+  'Sattvic dinner inside the auditorium',
+  'Personalised certificate of attendance',
+];
+
+const COMMON_VIDEOS = [
+  {
+    thumbnailUrl: img('1604608672516-f1b9b1b8b1b8'),
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    caption: 'Mumbai 2025 — Fusion Albela Band live, full house',
+  },
+  {
+    thumbnailUrl: img('1545158535-c3f7168c28b6'),
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    caption: 'Janmashtami 2025 — 4,200 people dancing in unison',
+  },
+];
+
+const COMMON_GALLERY = [
+  img('1604608672516-f1b9b1b8b1b8'),
+  img('1545158535-c3f7168c28b6'),
+  img('1601926038011-0e1e7d6f4d0a'),
+];
+
+const COMMON_TESTIMONIALS = [
+  {
+    name: 'Aanya R.', city: 'Mumbai', tier: 'gold' as const, rating: 5 as const,
+    quote: 'I dragged my friends. By the third song they were screaming the chorus louder than I was. We are flying to Pune for the next one.',
+    avatarUrl: img('1494790108377-be9c29b29330'),
+  },
+  {
+    name: 'Karan T.', city: 'Pune', tier: 'silver' as const, rating: 5 as const,
+    quote: 'Showed up alone, left with eight new friends. The Albela Band understands what 22-year-olds need from bhajans in 2026.',
+    avatarUrl: img('1492562080023-ab3db95bfbce'),
+  },
+  {
+    name: 'Riya M.', city: 'Ahmedabad', tier: 'diamond' as const, rating: 5 as const,
+    quote: 'VIP lounge was full of mausis and 19-year-olds and everyone was vibing. That is the vibe. That is the only review you need.',
+    avatarUrl: img('1438761681033-6461ffad8d80'),
+  },
+  {
+    name: 'Dev P.', city: 'Surat', tier: 'silver' as const, rating: 5 as const,
+    quote: 'Best ₹299 I have ever spent. Period.',
+    avatarUrl: img('1500648767791-00dcc994a43e'),
+  },
+  {
+    name: 'Meher S.', city: 'Delhi', tier: 'gold' as const, rating: 5 as const,
+    quote: 'My dad cried. My cousin danced on a chair. The fusion arrangement of Achyutam Keshavam is going to live rent-free in my head forever.',
+    avatarUrl: img('1535713875002-d1d0cf377fde'),
+  },
+];
 
 export const EVENTS: DevotionalEvent[] = [
   // ═══════════════════════════════════════════════════════
-  // 1. KRISHNA BHAJAN SANDHYA — Delhi — 14 May 2026
+  // 1. MUMBAI — 23 May 2026 (Saturday) — flagship
   // ═══════════════════════════════════════════════════════
   {
-    slug: 'krishna-bhajan-sandhya-delhi',
-    title: 'Krishna Bhajan Sandhya',
-    titleHindi: 'श्री कृष्ण भजन संध्या',
+    slug: 'mumbai-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Mumbai's Biggest Bhajan Clubbing",
+    titleHindi: 'मुंबई की सबसे बड़ी भजन क्लबिंग',
     deity: 'Krishna',
-    category: 'bhajan-sandhya',
-    city: 'Delhi',
-    venue: 'Indira Gandhi Indoor Stadium',
-    venueAddress: 'IP Estate, New Delhi — 110002',
-    date: '2026-05-14T18:00:00+05:30',
-    doorsOpen: '5:30 PM',
-    startTime: '6:00 PM',
+    category: 'kirtan-night',
+    city: 'Mumbai',
+    venue: 'NSCI Dome',
+    venueAddress: 'Lala Lajpat Rai Marg, Worli, Mumbai — 400018',
+    date: '2026-05-23T19:30:00+05:30',
+    doorsOpen: '6:30 PM',
+    startTime: '7:30 PM',
     durationHours: 3.5,
     heroImage: img('1604608672516-f1b9b1b8b1b8'),
-    galleryImages: [
-      img('1545158535-c3f7168c28b6'),
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1601926038011-0e1e7d6f4d0a'),
-    ],
-    pastEventVideos: [
-      {
-        thumbnailUrl: img('1604608672516-f1b9b1b8b1b8'),
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        caption: 'Diwali 2024 — 4,200 devotees in one voice',
-      },
-      {
-        thumbnailUrl: img('1545158535-c3f7168c28b6'),
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        caption: 'Janmashtami 2024 — Govinda Bolo highlights',
-      },
-    ],
-    storyShort: 'A 3-hour journey through Vrindavan — bhajans that make the heart melt.',
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Bhakti, but at a different frequency. Fusion Albela Band. NSCI Dome. One Saturday night.',
     storyLong: [
-      'You will sit in a hall lit only by the glow of 1,008 diyas. The first note will rise — soft, then full — and the whole room will lean in.',
-      'For three hours, you will live inside the bhajans of Vrindavan: Govinda Bolo, Achyutam Keshavam, Madhurashtakam. Not as a listener, but as part of the chorus.',
-      'When the last bhajan fades, you will not want to leave. That is what people tell us, every single time.',
+      'Mumbai\'s biggest Bhajan Clubbing of 2026, headlined by the Fusion Albela Band — the eight-piece bhakti collective that has redefined what a bhajan night feels like.',
+      'Tabla meets synth. Dhol meets sub-bass. Govinda Bolo meets a drop you will feel in your chest. Three and a half hours of bhajans you can dance to, sing to, or sit with — the auditorium leaves room for all three.',
+      'Doors at 6:30. Sets till 11. The Saturday night you tell people about for the rest of the year.',
     ],
     spiritualSignificance:
-      'Bhajan Sandhya is the bridge between dusk and the divine — the hour when even Krishna pauses to listen.',
-    artists: [
-      {
-        name: 'Pt. Sanjeev Krishna Sharma',
-        bio: 'Trained at the Mathura gharana for 28 years. Known for the Madhurashtakam that brings rooms to silence.',
-        imageUrl: img('1507003211169-0a1dd7228f2d'),
-        blessedCount: 2_40_000,
-      },
-      {
-        name: 'Smt. Jaya Kishori (special set)',
-        bio: 'India\'s most-streamed bhakti voice. Joining for a 30-minute Krishna special.',
-        imageUrl: img('1494790108377-be9c29b29330'),
-        blessedCount: 8_00_000,
-      },
-    ],
+      'Bhajan Clubbing is bhakti at the frequency of your generation — devotional, communal, electric.',
+    artists: [FUSION_ALBELA_BAND],
     tiers: [
       {
-        id: 'silver', name: 'Silver', price: 499,
-        perks: [
-          'Reserved seating — middle/back sections',
-          'Welcome prasad pouch',
-          'Digital aarti songbook',
-        ],
-        totalSeats: 2400, seatsRemaining: 1180,
+        id: 'silver', name: 'Silver', price: 799,
+        perks: PERKS_SILVER,
+        totalSeats: 3500, seatsRemaining: 1840,
       },
       {
-        id: 'gold', name: 'Gold', price: 999, popular: true,
-        perks: [
-          'Premium center seating — rows 5–12',
-          'Welcome prasad + temple shawl',
-          'Digital aarti songbook',
-          'Priority entry (skip queue)',
-          'Post-event meet & greet token',
-        ],
-        totalSeats: 800, seatsRemaining: 38,
+        id: 'gold', name: 'Gold', price: 1499, popular: true,
+        perks: PERKS_GOLD,
+        totalSeats: 1200, seatsRemaining: 218,
       },
       {
-        id: 'diamond', name: 'Diamond', price: 2499,
-        perks: [
-          'Front-row VIP seating — first 4 rows',
-          'Welcome prasad + silver kalash',
-          'Hardbound aarti songbook',
-          'VIP entry + private lounge access',
-          'Guaranteed meet & greet with artists',
-          'Post-event traditional dinner (sattvic)',
-          'Personalised certificate of attendance',
-        ],
-        totalSeats: 240, seatsRemaining: 64,
+        id: 'diamond', name: 'Diamond', price: 2999,
+        perks: PERKS_DIAMOND,
+        totalSeats: 380, seatsRemaining: 64,
       },
     ],
-    testimonials: [
-      { name: 'Rahul M.', city: 'Mumbai', tier: 'gold', rating: 5, quote: 'I came alone. Left with two hundred people who felt like family. The Govinda Bolo at 9 PM — I will hear it in my dreams.', avatarUrl: img('1535713875002-d1d0cf377fde') },
-      { name: 'Priya S.', city: 'Delhi', tier: 'diamond', rating: 5, quote: 'Worth every rupee. The diamond lounge prasad alone — my mother is still talking about it.', avatarUrl: img('1494790108377-be9c29b29330') },
-      { name: 'Arjun T.', city: 'Gurugram', tier: 'silver', rating: 5, quote: 'Silver tier and still felt like I was in Vrindavan. Booking gold next time, no question.', avatarUrl: img('1500648767791-00dcc994a43e') },
-      { name: 'Neha K.', city: 'Noida', tier: 'gold', rating: 5, quote: 'Took my parents. Dad cried in the second bhajan. Best gift I have ever given them.', avatarUrl: img('1438761681033-6461ffad8d80') },
-      { name: 'Vikram J.', city: 'Delhi', tier: 'gold', rating: 5, quote: 'The sound design alone is worth the ticket. You feel each note in your chest.', avatarUrl: img('1492562080023-ab3db95bfbce') },
-    ],
-    attendedCount: 4200,
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 5800,
     badge: 'almost-full',
     featured: true,
   },
 
   // ═══════════════════════════════════════════════════════
-  // 2. SHIV TANDAV — Bangalore — 21 May 2026
+  // 2. PUNE — 24 May 2026 — Hindi & Marathi
   // ═══════════════════════════════════════════════════════
   {
-    slug: 'shiv-tandav-stotram-live-bangalore',
-    title: 'Shiv Tandav Stotram — Live',
-    titleHindi: 'शिव ताण्डव स्तोत्रम्',
-    deity: 'Shiv',
+    slug: 'pune-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Pune's Biggest Bhajan Clubbing",
+    titleHindi: 'पुणे की सबसे बड़ी भजन क्लबिंग',
+    deity: 'Vitthal',
+    category: 'kirtan-night',
+    city: 'Pune',
+    venue: 'Balewadi Sports Complex Auditorium',
+    venueAddress: 'Mahalunge Road, Balewadi, Pune — 411045',
+    date: '2026-05-24T19:30:00+05:30',
+    doorsOpen: '6:30 PM',
+    startTime: '7:30 PM',
+    durationHours: 3.5,
+    heroImage: img('1545158535-c3f7168c28b6'),
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Hindi & Marathi bhajans, fusion sound, Pune\'s loudest auditorium. Sunday night, sold out vibes.',
+    storyLong: [
+      'Pune gets its own night — and this one is bilingual. Hindi and Marathi bhajans woven into the Fusion Albela Band\'s signature setlist.',
+      'Vitthal-Vitthal chants, Saint Tukaram couplets, fusion drops engineered to pull you up onto your feet. By the second song the seated section is standing.',
+      'Bring your parents. Bring your hostel mates. Bring your Tinder date. Everyone leaves on the same wavelength.',
+    ],
+    spiritualSignificance: 'When bhajans cross languages, bhakti has no accent.',
+    artists: [FUSION_ALBELA_BAND],
+    tiers: [
+      { id: 'silver', name: 'Silver', price: 799, perks: PERKS_SILVER, totalSeats: 2400, seatsRemaining: 1320 },
+      { id: 'gold', name: 'Gold', price: 1499, popular: true, perks: PERKS_GOLD, totalSeats: 800, seatsRemaining: 184 },
+      { id: 'diamond', name: 'Diamond', price: 2999, perks: PERKS_DIAMOND, totalSeats: 240, seatsRemaining: 47 },
+    ],
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 3600,
+    badge: 'trending',
+    featured: true,
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // 3. AHMEDABAD — 29 May 2026
+  // ═══════════════════════════════════════════════════════
+  {
+    slug: 'ahmedabad-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Ahmedabad's Biggest Bhajan Clubbing",
+    titleHindi: 'अहमदाबाद की सबसे बड़ी भजन क्लबिंग',
+    deity: 'Krishna',
+    category: 'kirtan-night',
+    city: 'Ahmedabad',
+    venue: 'Karnavati Club Convention Hall',
+    venueAddress: 'S.G. Highway, Ahmedabad — 380015',
+    date: '2026-05-29T20:00:00+05:30',
+    doorsOpen: '7:00 PM',
+    startTime: '8:00 PM',
+    durationHours: 3,
+    heroImage: img('1601926038011-0e1e7d6f4d0a'),
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Friday night. Krishna bhajans on a fusion bassline. The kind of night Ahmedabad has been waiting for.',
+    storyLong: [
+      'Ahmedabad night is Krishna night. The Fusion Albela Band leans into Vrindavan — Madhurashtakam, Govinda Bolo, Achyutam Keshavam — re-arranged for a generation that grew up on Coke Studio.',
+      'Three hours straight, no intermission. The setlist is built like an album — opener, build, peak, breakdown, finale.',
+      'Doors close at 8 sharp. Late entry costs you the first bhajan, and the first bhajan is the one nobody wants to miss.',
+    ],
+    spiritualSignificance: 'Friday night, but rendered in saffron.',
+    artists: [FUSION_ALBELA_BAND],
+    tiers: [
+      { id: 'silver', name: 'Silver', price: 799, perks: PERKS_SILVER, totalSeats: 1800, seatsRemaining: 920 },
+      { id: 'gold', name: 'Gold', price: 1499, popular: true, perks: PERKS_GOLD, totalSeats: 600, seatsRemaining: 142 },
+      { id: 'diamond', name: 'Diamond', price: 2999, perks: PERKS_DIAMOND, totalSeats: 180, seatsRemaining: 38 },
+    ],
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 2900,
+    badge: 'limited',
+    featured: true,
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // 4. SURAT — 31 May 2026 — entry-level pricing
+  // ═══════════════════════════════════════════════════════
+  {
+    slug: 'surat-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Surat's Biggest Bhajan Clubbing",
+    titleHindi: 'सूरत की सबसे बड़ी भजन क्लबिंग',
+    deity: 'Krishna',
+    category: 'kirtan-night',
+    city: 'Surat',
+    venue: 'Sanjeev Kumar Auditorium',
+    venueAddress: 'Pal-Adajan Road, Surat — 395009',
+    date: '2026-05-31T19:00:00+05:30',
+    doorsOpen: '6:00 PM',
+    startTime: '7:00 PM',
+    durationHours: 3,
+    heroImage: img('1545158535-c3f7168c28b6'),
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Surat\'s first ever Bhajan Clubbing. Tickets from ₹299. Don\'t scroll past this.',
+    storyLong: [
+      'Surat — this is your first one. We priced it so nobody has to think twice. Silver entry at ₹299.',
+      'Same Fusion Albela Band, same three-hour set, same bhakti-meets-bass energy that has sold out four cities. Sanjeev Kumar Auditorium has 1,800 seats and we expect every single one filled.',
+      'If you have never been to a Bhajan Clubbing — this is the night to find out what the noise is about.',
+    ],
+    spiritualSignificance: 'First-timers welcome. Bhakti does not check your CV.',
+    artists: [FUSION_ALBELA_BAND],
+    tiers: [
+      { id: 'silver', name: 'Silver', price: 299, perks: PERKS_SILVER, totalSeats: 1200, seatsRemaining: 740 },
+      { id: 'gold', name: 'Gold', price: 999, popular: true, perks: PERKS_GOLD, totalSeats: 400, seatsRemaining: 156 },
+      { id: 'diamond', name: 'Diamond', price: 1999, perks: PERKS_DIAMOND, totalSeats: 120, seatsRemaining: 41 },
+    ],
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 1100,
+    badge: 'new',
+    featured: true,
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // 5. DELHI — 6 June 2026
+  // ═══════════════════════════════════════════════════════
+  {
+    slug: 'delhi-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Delhi's Biggest Bhajan Clubbing",
+    titleHindi: 'दिल्ली की सबसे बड़ी भजन क्लबिंग',
+    deity: 'Ram',
+    category: 'kirtan-night',
+    city: 'Delhi',
+    venue: 'Indira Gandhi Indoor Stadium',
+    venueAddress: 'IP Estate, New Delhi — 110002',
+    date: '2026-06-06T19:30:00+05:30',
+    doorsOpen: '6:30 PM',
+    startTime: '7:30 PM',
+    durationHours: 3.5,
+    heroImage: img('1604608672516-f1b9b1b8b1b8'),
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Delhi night, IGI Stadium, Ram Naam on a fusion arrangement that hits like a stadium anthem.',
+    storyLong: [
+      'Delhi gets the largest auditorium and the loudest set. The Fusion Albela Band scaled their rig for this one — 11 musicians, full strings section, the works.',
+      'Setlist leans into Ram bhajans — Sri Ramachandra Kripalu, Raghupati Raghav — woven through fusion drops engineered for a 4,000-person sing-along.',
+      'When the room sings Raghupati Raghav together you will understand why we do this.',
+    ],
+    spiritualSignificance: 'A stadium full of voices is the loudest prayer there is.',
+    artists: [FUSION_ALBELA_BAND],
+    tiers: [
+      { id: 'silver', name: 'Silver', price: 799, perks: PERKS_SILVER, totalSeats: 4000, seatsRemaining: 2680 },
+      { id: 'gold', name: 'Gold', price: 1499, popular: true, perks: PERKS_GOLD, totalSeats: 1400, seatsRemaining: 410 },
+      { id: 'diamond', name: 'Diamond', price: 2999, perks: PERKS_DIAMOND, totalSeats: 400, seatsRemaining: 96 },
+    ],
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 4200,
+    badge: 'trending',
+    featured: true,
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // 6. BANGALORE — 13 June 2026
+  // ═══════════════════════════════════════════════════════
+  {
+    slug: 'bangalore-biggest-bhajan-clubbing-fusion-albela-band',
+    title: "Bangalore's Biggest Bhajan Clubbing",
+    titleHindi: 'बेंगलुरु की सबसे बड़ी भजन क्लबिंग',
+    deity: 'Krishna',
     category: 'kirtan-night',
     city: 'Bangalore',
     venue: 'Manpho Convention Centre',
     venueAddress: 'Nagawara Junction, Outer Ring Road, Bangalore — 560045',
-    date: '2026-05-21T19:00:00+05:30',
+    date: '2026-06-13T19:30:00+05:30',
     doorsOpen: '6:30 PM',
-    startTime: '7:00 PM',
-    durationHours: 2.5,
-    heroImage: img('1545158535-c3f7168c28b6'),
-    galleryImages: [
-      img('1545158535-c3f7168c28b6'),
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1601926038011-0e1e7d6f4d0a'),
-    ],
-    pastEventVideos: [
-      { thumbnailUrl: img('1545158535-c3f7168c28b6'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Mahashivratri 2024 — 108 chants in one breath' },
-    ],
-    storyShort: 'The Tandav, performed live with 11 Rudra-veena artists. Goosebumps guaranteed.',
-    storyLong: [
-      'Ravan composed the Tandav Stotram in chains. You will hear it as it was meant to be heard — full orchestra, full chorus, full devotion.',
-      'Eleven Rudra-veena artists, three percussion masters, and one voice that has chanted Shiva at Kashi for forty years.',
-      'When Bhole Nath\'s name is sung 108 times in unison, the hall goes quiet for 30 seconds afterward. Every. Single. Time.',
-    ],
-    spiritualSignificance:
-      'Tandav is the cosmic dance — destruction that creates. To hear it live is to feel reset.',
-    artists: [
-      {
-        name: 'Acharya Hariharan Iyer',
-        bio: 'Has chanted at Kashi Vishwanath every Mahashivratri for 40 years. Voice carries the Ganges.',
-        imageUrl: img('1507003211169-0a1dd7228f2d'),
-        blessedCount: 1_50_000,
-      },
-    ],
-    tiers: [
-      { id: 'silver', name: 'Silver', price: 599, perks: ['Reserved seating', 'Welcome rudraksh thread', 'Digital chant book'], totalSeats: 1800, seatsRemaining: 920 },
-      { id: 'gold', name: 'Gold', price: 1199, popular: true, perks: ['Center seating rows 5–12', 'Rudraksh thread + bhasma tilak', 'Digital chant book', 'Priority entry', 'Meet & greet token'], totalSeats: 600, seatsRemaining: 142 },
-      { id: 'diamond', name: 'Diamond', price: 2999, perks: ['Front-row VIP', 'Silver rudraksh mala', 'Hardbound chant book', 'VIP lounge', 'Guaranteed meet & greet', 'Sattvic dinner', 'Certificate'], totalSeats: 180, seatsRemaining: 41 },
-    ],
-    testimonials: [
-      { name: 'Karthik R.', city: 'Bangalore', tier: 'gold', rating: 5, quote: 'I have been to 20 concerts. None hit like this. The 108 Bhole Naths — I felt my spine straighten.', avatarUrl: img('1500648767791-00dcc994a43e') },
-      { name: 'Anita P.', city: 'Mysore', tier: 'silver', rating: 5, quote: 'Drove 3 hours for it. Would drive 6.', avatarUrl: img('1438761681033-6461ffad8d80') },
-    ],
-    attendedCount: 2800,
-    badge: 'trending',
-    featured: true,
-  },
-
-  // ═══════════════════════════════════════════════════════
-  // 3. HANUMAN CHALISA MAHAYAGNA — Mumbai — 28 May 2026
-  // ═══════════════════════════════════════════════════════
-  {
-    slug: 'hanuman-chalisa-mahayagna-mumbai',
-    title: 'Hanuman Chalisa Mahayagna',
-    titleHindi: 'हनुमान चालीसा महायज्ञ',
-    deity: 'Hanuman',
-    category: 'mahayagna',
-    city: 'Mumbai',
-    venue: 'NSCI Dome',
-    venueAddress: 'Lala Lajpat Rai Marg, Worli, Mumbai — 400018',
-    date: '2026-05-28T17:00:00+05:30',
-    doorsOpen: '4:30 PM',
-    startTime: '5:00 PM',
-    durationHours: 4,
-    heroImage: img('1601926038011-0e1e7d6f4d0a'),
-    galleryImages: [
-      img('1601926038011-0e1e7d6f4d0a'),
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1545158535-c3f7168c28b6'),
-    ],
-    pastEventVideos: [
-      { thumbnailUrl: img('1601926038011-0e1e7d6f4d0a'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Hanuman Jayanti 2024 — 108 Chalisa recitations' },
-      { thumbnailUrl: img('1604608672516-f1b9b1b8b1b8'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Sankat Mochan finale — 5,000 voices' },
-    ],
-    storyShort: '108 Hanuman Chalisa recitations in unison. The largest in Mumbai. Period.',
-    storyLong: [
-      'On a Tuesday in May, 5,000 devotees will recite the Hanuman Chalisa together — 108 times. By the 40th, the room will be vibrating.',
-      'A havan kund the size of a small car will burn at the center, fed every 11 minutes. The smoke is sweet — guggul, sandalwood, ghee.',
-      'You will leave with red eyes and a quieter mind. That is what Hanuman does.',
-    ],
-    spiritualSignificance:
-      'The Chalisa removes Sankat — obstacles. 108 recitations remove the deepest ones.',
-    artists: [
-      {
-        name: 'Pandit Shyam Mohan Goswami',
-        bio: 'Lead priest at Mehandipur Balaji for 22 years. Has performed 4,000+ yagnas.',
-        imageUrl: img('1507003211169-0a1dd7228f2d'),
-        blessedCount: 3_60_000,
-      },
-    ],
-    tiers: [
-      { id: 'silver', name: 'Silver', price: 399, perks: ['Reserved seating', 'Hanuman locket', 'Digital Chalisa book'], totalSeats: 3500, seatsRemaining: 2100 },
-      { id: 'gold', name: 'Gold', price: 899, popular: true, perks: ['Center seating', 'Hanuman locket + sindoor packet', 'Hardbound Chalisa', 'Priority entry', 'Yagna offering token'], totalSeats: 1200, seatsRemaining: 480 },
-      { id: 'diamond', name: 'Diamond', price: 2199, perks: ['Front circle around havan kund', 'Silver Hanuman locket', 'Yagna participation', 'VIP lounge', 'Meet & greet', 'Sattvic dinner', 'Certificate'], totalSeats: 400, seatsRemaining: 88 },
-    ],
-    testimonials: [
-      { name: 'Ramesh G.', city: 'Mumbai', tier: 'diamond', rating: 5, quote: 'Sat 8 feet from the havan. The heat, the chants — I felt every Sankat lift off me.', avatarUrl: img('1492562080023-ab3db95bfbce') },
-      { name: 'Sneha D.', city: 'Thane', tier: 'gold', rating: 5, quote: 'Took my whole family. Mother said it was the most powerful evening of her life.', avatarUrl: img('1494790108377-be9c29b29330') },
-    ],
-    attendedCount: 5800,
-    badge: 'trending',
-    featured: true,
-  },
-
-  // ═══════════════════════════════════════════════════════
-  // 4. GANGA AARTI SUNSET — Goa — 4 June 2026
-  // ═══════════════════════════════════════════════════════
-  {
-    slug: 'ganga-aarti-sunset-goa',
-    title: 'Ganga Aarti by the Sea',
-    titleHindi: 'गंगा आरती',
-    deity: 'Ganga',
-    category: 'aarti-experience',
-    city: 'Goa',
-    venue: 'Miramar Beach Amphitheatre',
-    venueAddress: 'Miramar, Panaji, Goa — 403002',
-    date: '2026-06-04T18:30:00+05:30',
-    doorsOpen: '5:30 PM',
-    startTime: '6:30 PM',
-    durationHours: 2,
-    heroImage: img('1604608672516-f1b9b1b8b1b8'),
-    galleryImages: [
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1601926038011-0e1e7d6f4d0a'),
-      img('1545158535-c3f7168c28b6'),
-    ],
-    pastEventVideos: [
-      { thumbnailUrl: img('1604608672516-f1b9b1b8b1b8'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Goa 2024 — sunset aarti at Miramar' },
-    ],
-    storyShort: 'Varanasi\'s Ganga Aarti — recreated on the Arabian Sea. Sunset till stars.',
-    storyLong: [
-      'The aarti you have only seen in videos from Varanasi — performed on the sand of Miramar, with the Arabian Sea as your Ganga.',
-      'Eleven priests, brass lamps the size of footballs, and a sunset that seems choreographed for the moment.',
-      'Bring your family. Bring your camera. Bring nothing — just be there.',
-    ],
-    spiritualSignificance:
-      'Aarti is the moment of seeing — when you see the divine, and the divine sees you.',
-    artists: [
-      {
-        name: 'Acharya Mishra (Varanasi)',
-        bio: 'Has led the evening aarti at Dashashwamedh Ghat for 18 years. Travels for 3 events a year.',
-        imageUrl: img('1507003211169-0a1dd7228f2d'),
-        blessedCount: 95_000,
-      },
-    ],
-    tiers: [
-      { id: 'silver', name: 'Silver', price: 699, perks: ['Open seating on sand', 'Floating diya', 'Digital aarti book'], totalSeats: 1500, seatsRemaining: 760 },
-      { id: 'gold', name: 'Gold', price: 1399, popular: true, perks: ['Reserved cushion seating', 'Floating diya + flower garland', 'Hardbound aarti book', 'Priority entry', 'Sunset photo token'], totalSeats: 500, seatsRemaining: 92 },
-      { id: 'diamond', name: 'Diamond', price: 3499, perks: ['Front-row platform seating', 'Brass diya keepsake', 'Family of 2 floating diyas', 'Beachfront private lounge', 'Aarti participation', 'Sattvic dinner on the sand', 'Photographer assigned'], totalSeats: 120, seatsRemaining: 22 },
-    ],
-    testimonials: [
-      { name: 'Maya F.', city: 'Goa', tier: 'gold', rating: 5, quote: 'I have lived in Goa 14 years. This was the most beautiful evening this beach has ever held.', avatarUrl: img('1494790108377-be9c29b29330') },
-      { name: 'Rohan B.', city: 'Pune', tier: 'diamond', rating: 5, quote: 'Drove down for it. Diamond was overkill in the best way — beach lounge with my parents, dinner on the sand.', avatarUrl: img('1500648767791-00dcc994a43e') },
-    ],
-    attendedCount: 1900,
-    badge: 'limited',
-    featured: true,
-  },
-
-  // ═══════════════════════════════════════════════════════
-  // 5. DEVI BHAJAN JAGRAN — Chennai — 12 June 2026
-  // ═══════════════════════════════════════════════════════
-  {
-    slug: 'devi-bhajan-jagran-chennai',
-    title: 'Devi Bhajan Jagran',
-    titleHindi: 'देवी भजन जागरण',
-    deity: 'Devi',
-    category: 'devi-jagran',
-    city: 'Chennai',
-    venue: 'Music Academy',
-    venueAddress: 'TTK Road, Chennai — 600014',
-    date: '2026-06-12T20:00:00+05:30',
-    doorsOpen: '7:30 PM',
-    startTime: '8:00 PM',
-    durationHours: 5,
-    heroImage: img('1601926038011-0e1e7d6f4d0a'),
-    galleryImages: [
-      img('1601926038011-0e1e7d6f4d0a'),
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1545158535-c3f7168c28b6'),
-    ],
-    pastEventVideos: [
-      { thumbnailUrl: img('1601926038011-0e1e7d6f4d0a'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Navratri 2024 — all-night Mata jagran' },
-    ],
-    storyShort: 'All-night Mata jagran. 8 PM to 1 AM. The Devi listens loudest at midnight.',
-    storyLong: [
-      'A traditional jagran — five hours of bhajans, garba, and Devi paath. From 8 PM, when the doors open, until 1 AM, when the aarti closes the night.',
-      'You will dance, you will sing, you will sit silent. The room takes you through every emotion the Devi knows.',
-      'Tea and snacks served through the night. No one leaves before the final aarti — that is the rule of the Devi.',
-    ],
-    spiritualSignificance:
-      'A jagran is a vow — to stay awake with the Mother through the night. She remembers.',
-    artists: [
-      {
-        name: 'Smt. Anuradha Paudwal',
-        bio: 'India\'s most-recorded Devi voice. 4,000+ recorded bhajans. Special 90-minute set.',
-        imageUrl: img('1494790108377-be9c29b29330'),
-        blessedCount: 12_00_000,
-      },
-    ],
-    tiers: [
-      { id: 'silver', name: 'Silver', price: 449, perks: ['Reserved seating', 'Welcome chai + prasad', 'Digital paath book'], totalSeats: 1600, seatsRemaining: 980 },
-      { id: 'gold', name: 'Gold', price: 949, popular: true, perks: ['Center seating', 'Chai + prasad + bindi packet', 'Hardbound paath book', 'Priority entry', 'Midnight aarti token'], totalSeats: 500, seatsRemaining: 178 },
-      { id: 'diamond', name: 'Diamond', price: 2299, perks: ['Front-row platform', 'Silver Devi locket', 'All-night refreshments', 'VIP lounge with cot rest', 'Aarti participation', 'Pre-dawn breakfast', 'Certificate'], totalSeats: 150, seatsRemaining: 47 },
-    ],
-    testimonials: [
-      { name: 'Lakshmi V.', city: 'Chennai', tier: 'gold', rating: 5, quote: 'Stayed till 1:30 AM. Walked out feeling lighter than I have in years.', avatarUrl: img('1438761681033-6461ffad8d80') },
-      { name: 'Suresh K.', city: 'Coimbatore', tier: 'silver', rating: 5, quote: 'My mother\'s 60th birthday. She has not stopped smiling for a week.', avatarUrl: img('1492562080023-ab3db95bfbce') },
-    ],
-    attendedCount: 2300,
-    badge: 'new',
-    featured: false,
-  },
-
-  // ═══════════════════════════════════════════════════════
-  // 6. RAM NAAM SANKIRTAN — Delhi — 19 June 2026
-  // ═══════════════════════════════════════════════════════
-  {
-    slug: 'ram-naam-sankirtan-delhi',
-    title: 'Ram Naam Sankirtan',
-    titleHindi: 'राम नाम संकीर्तन',
-    deity: 'Ram',
-    category: 'satsang',
-    city: 'Delhi',
-    venue: 'Talkatora Indoor Stadium',
-    venueAddress: 'Talkatora Garden, New Delhi — 110001',
-    date: '2026-06-19T18:30:00+05:30',
-    doorsOpen: '6:00 PM',
-    startTime: '6:30 PM',
+    startTime: '7:30 PM',
     durationHours: 3,
     heroImage: img('1545158535-c3f7168c28b6'),
-    galleryImages: [
-      img('1545158535-c3f7168c28b6'),
-      img('1604608672516-f1b9b1b8b1b8'),
-      img('1601926038011-0e1e7d6f4d0a'),
-    ],
-    pastEventVideos: [
-      { thumbnailUrl: img('1545158535-c3f7168c28b6'), videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Ram Navami 2024 — sankirtan with 3,500 voices' },
-    ],
-    storyShort: '108-minute non-stop Ram Naam. Doors close at 6:30 sharp — no late entry.',
+    galleryImages: COMMON_GALLERY,
+    pastEventVideos: COMMON_VIDEOS,
+    storyShort: 'Bangalore — bilingual bhajans, fusion arrangements, the techiest crowd in India.',
     storyLong: [
-      '108 minutes. One name. Ten thousand repetitions. No breaks, no announcements, no introductions — just Ram, Ram, Ram, until the room becomes the name.',
-      'Doors close at 6:30 PM and do not reopen until 8:18 PM. This is a sankirtan, not a concert.',
-      'Bring water. Bring patience. Leave with something quieter than you came in with.',
+      'Bangalore gets a bilingual set — Hindi and English. The Albela Band has been working this one for months: classic bhajans, contemporary harmonies, lyrics translated and projected so everyone in the room is singing.',
+      'A perfect Saturday in June. 7:30 PM doors, 11 PM curfew. Three hours that pass in twenty minutes.',
+      'Tickets always sell fastest in Bangalore. We mean it.',
     ],
-    spiritualSignificance:
-      'The Ram Naam is the boat. 108 minutes of it crosses what years of effort cannot.',
-    artists: [
-      {
-        name: 'Swami Atmananda Saraswati',
-        bio: 'Disciple of Swami Dayananda. Has led sankirtans across 14 countries.',
-        imageUrl: img('1507003211169-0a1dd7228f2d'),
-        blessedCount: 60_000,
-      },
-    ],
+    spiritualSignificance: 'Bhakti scales. So does this band.',
+    artists: [FUSION_ALBELA_BAND],
     tiers: [
-      { id: 'silver', name: 'Silver', price: 349, perks: ['Reserved seating', 'Tulsi mala', 'Digital sankirtan card'], totalSeats: 1800, seatsRemaining: 1100 },
-      { id: 'gold', name: 'Gold', price: 799, popular: true, perks: ['Center seating', 'Tulsi mala + Ram tilak', 'Hardbound sankirtan book', 'Priority entry', 'Post-event satsang access'], totalSeats: 600, seatsRemaining: 215 },
-      { id: 'diamond', name: 'Diamond', price: 1899, perks: ['Front-circle around the dais', 'Sandalwood Ram mala', 'Pre-event meet with Swamiji', 'VIP lounge', 'Sattvic dinner', 'Personal blessing token', 'Certificate'], totalSeats: 200, seatsRemaining: 56 },
+      { id: 'silver', name: 'Silver', price: 799, perks: PERKS_SILVER, totalSeats: 2200, seatsRemaining: 1290 },
+      { id: 'gold', name: 'Gold', price: 1499, popular: true, perks: PERKS_GOLD, totalSeats: 700, seatsRemaining: 178 },
+      { id: 'diamond', name: 'Diamond', price: 2999, perks: PERKS_DIAMOND, totalSeats: 220, seatsRemaining: 52 },
     ],
-    testimonials: [
-      { name: 'Deepak A.', city: 'Delhi', tier: 'silver', rating: 5, quote: '108 minutes flew. I checked my watch at 7:50 thinking 20 minutes had passed.', avatarUrl: img('1492562080023-ab3db95bfbce') },
-      { name: 'Asha M.', city: 'Faridabad', tier: 'gold', rating: 5, quote: 'I have been to many satsangs. None pulled me in like this one. The silence at 8:18 was thunderous.', avatarUrl: img('1438761681033-6461ffad8d80') },
-    ],
-    attendedCount: 3400,
-    badge: 'limited',
-    featured: false,
+    testimonials: COMMON_TESTIMONIALS,
+    attendedCount: 3300,
+    badge: 'trending',
+    featured: true,
   },
 ];
 
@@ -409,21 +346,21 @@ export function getFeaturedEvents(): DevotionalEvent[] {
 
 export function getEventsByCity(city: string): DevotionalEvent[] {
   if (city === 'All') return EVENTS;
-  return EVENTS.filter((e) => e.city === city);
+  return EVENTS.filter((e) => e.city === city || e.venue.toLowerCase().includes(city.toLowerCase()));
 }
 
 // ─── LIVE BOOKING TICKER (rotates every 90s in the UI) ───
 export const RECENT_BOOKINGS: LiveBooking[] = [
-  { name: 'Rahul', city: 'Mumbai', tier: 'gold', minutesAgo: 2 },
-  { name: 'Priya', city: 'Delhi', tier: 'silver', minutesAgo: 4 },
-  { name: 'Karthik', city: 'Bangalore', tier: 'diamond', minutesAgo: 6 },
-  { name: 'Anjali', city: 'Pune', tier: 'gold', minutesAgo: 8 },
-  { name: 'Suresh', city: 'Chennai', tier: 'gold', minutesAgo: 11 },
-  { name: 'Maya', city: 'Goa', tier: 'diamond', minutesAgo: 13 },
-  { name: 'Vikram', city: 'Noida', tier: 'silver', minutesAgo: 15 },
-  { name: 'Neha', city: 'Gurugram', tier: 'gold', minutesAgo: 17 },
-  { name: 'Arjun', city: 'Hyderabad', tier: 'gold', minutesAgo: 19 },
-  { name: 'Sneha', city: 'Thane', tier: 'silver', minutesAgo: 22 },
-  { name: 'Lakshmi', city: 'Coimbatore', tier: 'gold', minutesAgo: 25 },
-  { name: 'Rohan', city: 'Pune', tier: 'diamond', minutesAgo: 28 },
+  { name: 'Aanya', city: 'Mumbai', tier: 'gold', minutesAgo: 2 },
+  { name: 'Karan', city: 'Pune', tier: 'silver', minutesAgo: 4 },
+  { name: 'Riya', city: 'Ahmedabad', tier: 'diamond', minutesAgo: 6 },
+  { name: 'Dev', city: 'Surat', tier: 'silver', minutesAgo: 8 },
+  { name: 'Meher', city: 'Delhi', tier: 'gold', minutesAgo: 11 },
+  { name: 'Aryan', city: 'Bangalore', tier: 'gold', minutesAgo: 13 },
+  { name: 'Tara', city: 'Mumbai', tier: 'diamond', minutesAgo: 15 },
+  { name: 'Ishaan', city: 'Pune', tier: 'gold', minutesAgo: 17 },
+  { name: 'Naina', city: 'Ahmedabad', tier: 'silver', minutesAgo: 19 },
+  { name: 'Vivaan', city: 'Surat', tier: 'silver', minutesAgo: 22 },
+  { name: 'Saanvi', city: 'Delhi', tier: 'gold', minutesAgo: 25 },
+  { name: 'Aditya', city: 'Bangalore', tier: 'diamond', minutesAgo: 28 },
 ];

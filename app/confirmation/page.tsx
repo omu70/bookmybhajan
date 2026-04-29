@@ -48,7 +48,7 @@ function ConfirmationInner() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const raw = sessionStorage.getItem('darshan-receipt');
+    const raw = sessionStorage.getItem('bmb-receipt');
     if (!raw) return;
     try {
       setReceipt(JSON.parse(raw));
@@ -74,14 +74,14 @@ function ConfirmationInner() {
               <CheckCircle2 className="size-10" strokeWidth={2} />
             </span>
           </span>
-          <p className="mt-4 font-deva text-lg text-saffron-200">
+          <p className="mt-4 font-deva text-lg text-maroon-700">
             🙏 जय श्री {event?.deity ?? 'राम'}
           </p>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">
-            You&apos;re in!
+            You&apos;re in. See you Saturday.
           </h1>
           <p className="mt-2 text-text-muted">
-            Your seat is confirmed.{' '}
+            Tier confirmed. Doors open 60 minutes before showtime — earlier you walk in, better the view.{' '}
             {receipt ? (
               <>WhatsApp ticket sent to <span className="font-semibold text-text-primary">+91 {receipt.whatsapp}</span></>
             ) : (
@@ -115,8 +115,8 @@ function ConfirmationInner() {
 
           {/* Notch */}
           <div className="relative h-6">
-            <div className="absolute inset-y-0 left-0 size-6 -translate-x-1/2 rounded-full bg-ink-900" />
-            <div className="absolute inset-y-0 right-0 size-6 translate-x-1/2 rounded-full bg-ink-900" />
+            <div className="absolute inset-y-0 left-0 size-6 -translate-x-1/2 rounded-full bg-cream-100" />
+            <div className="absolute inset-y-0 right-0 size-6 translate-x-1/2 rounded-full bg-cream-100" />
             <div className="absolute inset-x-6 top-1/2 border-t border-dashed border-white/15" />
           </div>
 
@@ -146,10 +146,10 @@ function ConfirmationInner() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 border-t border-white/5 bg-black/20 p-4">
+          <div className="grid grid-cols-2 gap-3 border-t border-maroon-900/10 bg-cream-100/60 p-4">
             <button
               type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-2.5 text-sm font-semibold hover:bg-white/10"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-maroon-900/15 bg-cream-100 py-2.5 text-sm font-semibold text-text-primary hover:bg-cream-200"
             >
               <Download className="size-4" /> Download
             </button>
@@ -175,15 +175,15 @@ function ConfirmationInner() {
               Add reminder →
             </button>
           </div>
-          <div className="rounded-2xl border border-gold/30 bg-gold/5 p-5">
-            <Gift className="size-5 text-gold" />
-            <p className="mt-3 font-semibold">Invite a friend, save ₹100</p>
+          <div className="rounded-2xl border border-saffron-500/35 bg-saffron-50 p-5">
+            <Gift className="size-5 text-saffron-700" />
+            <p className="mt-3 font-semibold">Bring a friend, save ₹100 each</p>
             <p className="mt-1 text-xs text-text-muted">
-              They get ₹100 off their first ticket. You get ₹100 credit on your next event.
+              They get ₹100 off their first night. You get ₹100 credit toward your next city.
             </p>
             <button
               type="button"
-              className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-gold hover:underline"
+              className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-saffron-700 hover:underline"
             >
               Copy referral link →
             </button>

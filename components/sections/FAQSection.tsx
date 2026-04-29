@@ -7,20 +7,24 @@ import { cn } from '@/lib/utils';
 
 const FAQ = [
   {
+    q: 'Do I get to pick my seat?',
+    a: 'Inside your tier, no — seating is first-come-first-served. So Diamond, Gold and Silver are zones, and the earlier you walk in, the better your view inside that zone. Doors open 60 minutes before showtime for a reason.',
+  },
+  {
     q: 'What if I can\'t attend?',
     a: 'Cancel up to 7 days before the event for a full refund — no questions asked. Within 7 days, you can transfer your ticket to a friend or family member by replying to your WhatsApp confirmation.',
   },
   {
     q: 'Will I get a confirmation?',
-    a: 'Yes — instantly. Your QR e-ticket lands on WhatsApp within 30 seconds of payment, and is also emailed to you. Show either at the gate.',
+    a: 'Yes — instantly. Your QR e-ticket lands on WhatsApp within 30 seconds of payment, and is emailed to you as well. Show either at the gate.',
   },
   {
-    q: 'Is parking available at the venue?',
-    a: 'Most venues offer paid valet parking on a first-come basis. We recommend cab/UPI metro for major-city events. Each venue page lists exact parking details.',
+    q: 'Is the music traditional or fusion?',
+    a: 'Both. The Fusion Albela Band keeps the bhajans you grew up with — Govinda Bolo, Achyutam Keshavam, Hare Krishna — and re-arranges them for a modern stage: tabla, dhol, electric sarangi, synth, full chorus. Your dadi will sing along. Your hostel mates will dance.',
   },
   {
     q: 'Can I buy tickets at the gate?',
-    a: 'No. Every event we host has been sold out at the door for the past 18 months. We do not release on-the-day tickets — book online to guarantee your seat.',
+    a: 'No. Every Bhajan Clubbing night so far has been sold out at the door. We do not release on-the-day tickets — book online to guarantee your spot.',
   },
 ];
 

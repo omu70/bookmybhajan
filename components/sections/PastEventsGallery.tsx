@@ -52,13 +52,13 @@ export function PastEventsGallery({ videos, galleryImages }: PastEventsGalleryPr
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/85 via-maroon-900/25 to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="flex size-16 items-center justify-center rounded-full bg-gold/95 text-ink-900 shadow-gold-glow-lg transition-transform group-hover:scale-110">
                 <Play className="ml-1 size-7 fill-ink-900" />
               </span>
             </div>
-            <p className="absolute bottom-3 left-4 right-4 text-left text-sm font-semibold text-text-primary">
+            <p className="absolute bottom-3 left-4 right-4 text-left text-sm font-semibold text-cream-50">
               {v.caption}
             </p>
           </motion.button>
@@ -93,7 +93,7 @@ export function PastEventsGallery({ videos, galleryImages }: PastEventsGalleryPr
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-maroon-900/65 p-4 backdrop-blur-sm"
             onClick={() => setActive(null)}
             role="dialog"
             aria-modal="true"

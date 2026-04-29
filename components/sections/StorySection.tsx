@@ -85,7 +85,7 @@ export function StorySection({ event }: StorySectionProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-transparent to-transparent" />
 
           {/* Floating venue card */}
-          <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-glass-border bg-ink-900/70 p-4 backdrop-blur-glass">
+          <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-glass-border bg-cream-50/85 p-4 backdrop-blur-glass shadow-glass">
             <p className="eyebrow text-[10px]">Venue</p>
             <p className="mt-1 text-base font-semibold text-text-primary">{event.venue}</p>
             <p className="mt-0.5 text-xs text-text-muted">{event.venueAddress}</p>

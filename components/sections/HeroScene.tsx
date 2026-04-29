@@ -113,12 +113,12 @@ export default function HeroScene() {
       style={{ background: 'transparent' }}
       // Cap at 30fps on slower devices via frameloop="demand" if needed.
     >
-      <ambientLight intensity={0.18} color="#5a3a8a" />
-      <directionalLight position={[3, 4, 2]} intensity={0.5} color="#ffd9a8" />
+      <ambientLight intensity={0.55} color="#fff0d0" />
+      <directionalLight position={[3, 4, 2]} intensity={0.7} color="#ffd9a8" />
       <FlameDiya />
       <ParallaxRig />
-      <Environment preset="night" />
-      <fog attach="fog" args={['#0a0414', 4, 12]} />
+      <Environment preset="sunset" />
+      <fog attach="fog" args={['#fff5e3', 5, 14]} />
     </Canvas>
   );
 }
