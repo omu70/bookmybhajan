@@ -25,21 +25,14 @@ export function DevoteeVoices() {
           className="max-w-2xl"
         >
           <p className="eyebrow">From past nights</p>
-          <p className="mt-4 font-deva text-xl font-semibold text-maroon-700 sm:text-2xl">
-            श्रोताओं की आवाज़
-          </p>
-          <h2 className="mt-2 font-display text-3xl font-medium leading-[1.05] tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-medium leading-[1.05] tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
             What people say{' '}
             <span className="italic text-saffron-grad">on the way home.</span>
           </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-text-muted sm:text-base">
-            Notes received over WhatsApp from past Bhajan Clubbing nights.
-            Every show, the same kinds of messages.
-          </p>
         </motion.div>
 
         {/* Reviews grid — 2-up mobile, 3-up desktop */}
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-5 lg:grid-cols-4">
           {REVIEWS.map((r, i) => (
             <motion.article
               key={`${r.name}-${i}`}

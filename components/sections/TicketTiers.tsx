@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Check, Minus, Plus, Star } from 'lucide-react';
 import { GoldButton } from '@/components/ui/GoldButton';
 import { ScarcityBadge } from '@/components/ui/ScarcityBadge';
+import { MobilePricingCarousel } from './MobilePricingCarousel';
 import { cn, formatINR } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import type { DevotionalEvent, Tier } from '@/types';
@@ -56,8 +57,19 @@ export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTie
         </p>
       </div>
 
-      {/* Tier list — vertical on mobile, 3-col on sm+ */}
-      <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+      {/* MOBILE: 2.5-card horizontal carousel */}
+      <MobilePricingCarousel
+        tiers={event.tiers}
+        active={selected}
+        onSelect={(t) => select(t)}
+        onReserve={(t) => {
+          trackEvent('click_book_now', { slug: event.slug, tier: t, qty, source: 'carousel' });
+          onProceed(t, qty);
+        }}
+      />
+
+      {/* DESKTOP: 3-up grid (hidden on mobile, the carousel above replaces this) */}
+      <div className="hidden gap-3 sm:grid sm:grid-cols-3 sm:gap-4">
         {event.tiers.map((t, i) => {
           const isSelected = selected === t.id;
           return (

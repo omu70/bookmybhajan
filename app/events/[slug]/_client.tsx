@@ -18,6 +18,7 @@ import { TicketTiers } from '@/components/sections/TicketTiers';
 import { AuditoriumZones } from '@/components/sections/AuditoriumZones';
 import { BhajanAmbience } from '@/components/sections/BhajanAmbience';
 import { EventPoster } from '@/components/sections/EventPoster';
+import { BookingUrgencyPanel } from '@/components/sections/BookingUrgencyPanel';
 import { trackEvent } from '@/lib/analytics';
 import { formatINR, formatLongDate } from '@/lib/utils';
 import type { DevotionalEvent, Tier } from '@/types';
@@ -134,6 +135,11 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
             <p className="mt-4 text-xs text-text-muted">
               First-come-first-served seating inside each tier · Razorpay-secure checkout
             </p>
+
+            {/* AGGRESSIVE URGENCY PANEL — countdown + scarcity + live activity */}
+            <div className="mt-8">
+              <BookingUrgencyPanel event={event} />
+            </div>
           </motion.div>
         </div>
       </section>
