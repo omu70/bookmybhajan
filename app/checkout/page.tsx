@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import { EventPoster } from '@/components/sections/EventPoster';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -379,15 +379,9 @@ function CheckoutInner() {
               className="md:sticky md:top-28"
             >
               <div className="overflow-hidden rounded-3xl border border-saffron-500/30 bg-cream-50 shadow-card-hover">
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src={event.heroImage}
-                    alt={event.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 40vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/80 to-transparent" />
+                <div className="relative aspect-square w-full">
+                  <EventPoster event={event} className="h-full w-full" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/55 to-transparent" />
                   <div className="absolute inset-x-3 bottom-3">
                     <p className="text-[10px] uppercase tracking-widest text-saffron-200">
                       You&apos;re booking

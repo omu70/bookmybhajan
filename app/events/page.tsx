@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils';
 const CITIES = ['All', 'Mumbai', 'Pune', 'Ahmedabad', 'Surat', 'Bangalore'] as const;
 const SORTS = [
   { id: 'soon', label: 'Happening soon' },
-  { id: 'popular', label: 'Most popular' },
   { id: 'price-asc', label: 'Price: Low → High' },
 ] as const;
 
@@ -44,7 +43,6 @@ function EventListingInner() {
     if (city !== 'All') list = list.filter((e) => e.city === city);
     list = list.filter((e) => Math.min(...e.tiers.map((t) => t.price)) <= maxPrice);
     if (sort === 'soon') list.sort((a, b) => +new Date(a.date) - +new Date(b.date));
-    if (sort === 'popular') list.sort((a, b) => b.attendedCount - a.attendedCount);
     if (sort === 'price-asc')
       list.sort(
         (a, b) =>

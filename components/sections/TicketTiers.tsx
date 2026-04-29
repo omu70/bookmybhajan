@@ -12,17 +12,21 @@ import type { DevotionalEvent, Tier } from '@/types';
 interface TicketTiersProps {
   event: DevotionalEvent;
   onProceed: (tier: Tier, quantity: number) => void;
-  /** Optional callback fired whenever the selected tier changes — lets parents (e.g. AuditoriumZones) sync. */
   onTierChange?: (tier: Tier) => void;
-  /** Controlled value — overrides the internal default selection. */
   value?: Tier;
 }
 
 /**
- * TicketTiers — anchoring on Gold lifts AOV by ~23%.
- * Default selection = Gold (the "popular" tier). Border glow + ⭐ badge.
- * Cards are equal-height; perks list always shows Silver < Gold < Diamond
- * with strict +2 perk progression — visual anchoring.
+ * TicketTiers — minimal three-tier picker.
+ *
+ * Just the facts: tier name, price, seats remaining. No invented perks.
+ * Gold pre-selected (popular). Click any tier card to switch.
+ *
+ * Layout:
+ *   • Mobile: vertical stack (each tier full-width row, name+price+select)
+ *   • sm+: 3 equal columns
+ *
+ * Quantity stepper + reserve CTA pinned at the bottom.
  */
 export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTiersProps) {
   const initial: Tier = (event.tiers.find((t) => t.popular)?.id ?? 'gold') as Tier;
@@ -42,60 +46,58 @@ export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTie
 
   return (
     <div>
-      <div className="mb-8 max-w-2xl">
+      <div className="mb-7 max-w-md">
         <p className="eyebrow">Pick your area</p>
-        <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">
-          Three ways to vibe.
+        <h2 className="mt-3 font-display text-3xl font-medium tracking-tight sm:text-4xl">
+          Choose a tier.
         </h2>
-        <p className="mt-3 text-text-muted">
-          Most devotees pick <span className="font-semibold text-saffron-700">Gold</span> —
-          center stage, priority entry, and a meet-and-greet with the Albela Band.{' '}
-          <span className="text-text-strong">Seating is first-come-first-served inside each area.</span>
+        <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
+          Seating is first-come-first-served inside each area. Earlier you walk in, better the view.
         </p>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
+      {/* Tier list — vertical on mobile, 3-col on sm+ */}
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
         {event.tiers.map((t, i) => {
           const isSelected = selected === t.id;
           return (
             <motion.button
               key={t.id}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.35, delay: i * 0.06 }}
               type="button"
               onClick={() => select(t.id)}
               aria-pressed={isSelected}
               className={cn(
-                'relative text-left rounded-2xl p-6 transition-all duration-200',
+                'relative w-full rounded-2xl border p-4 text-left transition-all sm:p-5',
                 isSelected
-                  ? 'glass-gold shadow-card-hover ring-2 ring-gold'
-                  : 'glass hover:border-white/20'
+                  ? 'border-saffron-500/70 bg-saffron-50 shadow-saffron-glow'
+                  : 'border-maroon-900/12 bg-cream-50 hover:border-saffron-500/40'
               )}
             >
               {t.popular && (
-                <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-gold-grad px-3 py-1 text-[11px] font-bold text-ink-900 shadow-gold-glow-lg">
-                  <Star className="size-3 fill-ink-900" /> Most popular
+                <span className="absolute -top-2.5 left-4 inline-flex items-center gap-1 rounded-full bg-gold-grad px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-text-primary shadow-gold-glow-lg">
+                  <Star className="size-2.5 fill-text-primary" /> POPULAR
                 </span>
               )}
 
-              <div className="flex items-start justify-between">
+              <div className="flex items-center justify-between gap-3 sm:block">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-text-muted">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                     {t.name}
                   </p>
-                  <p className="mt-2 font-display text-4xl font-bold text-text-primary tabular">
+                  <p className="mt-1 font-display text-2xl font-medium text-text-primary tabular sm:mt-2 sm:text-3xl">
                     {formatINR(t.price)}
                   </p>
-                  <p className="text-xs text-text-muted">per seat</p>
                 </div>
                 <span
                   className={cn(
-                    'flex size-7 items-center justify-center rounded-full transition-all',
+                    'grid size-7 shrink-0 place-items-center rounded-full transition-all sm:mt-3',
                     isSelected
-                      ? 'bg-gold text-ink-900'
-                      : 'border border-white/20 text-transparent'
+                      ? 'bg-saffron-500 text-white'
+                      : 'border border-maroon-900/20 text-transparent'
                   )}
                   aria-hidden
                 >
@@ -103,17 +105,7 @@ export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTie
                 </span>
               </div>
 
-              <ul className="mt-5 space-y-2.5 text-sm text-text-muted">
-                {t.perks.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-gold" strokeWidth={2.5} />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Per-tier scarcity */}
-              <div className="mt-5 border-t border-white/5 pt-4">
+              <div className="mt-3 sm:mt-4">
                 <ScarcityBadge
                   remaining={t.seatsRemaining}
                   total={t.totalSeats}
@@ -125,52 +117,55 @@ export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTie
         })}
       </div>
 
-      {/* Quantity + total */}
-      <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-glass-border bg-glass-surface p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <p className="text-sm font-medium text-text-muted">Quantity</p>
-          <div className="inline-flex items-center gap-3 rounded-full border border-maroon-900/15 bg-cream-50 px-2 py-1.5">
-            <button
-              type="button"
-              aria-label="Decrease quantity"
-              onClick={() => {
-                setQty((q) => Math.max(1, q - 1));
-                trackEvent('change_quantity', { dir: 'down' });
-              }}
-              className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
-            >
-              <Minus className="size-4" />
-            </button>
-            <span className="w-6 text-center font-bold tabular">{qty}</span>
-            <button
-              type="button"
-              aria-label="Increase quantity"
-              onClick={() => {
-                setQty((q) => Math.min(6, q + 1));
-                trackEvent('change_quantity', { dir: 'up' });
-              }}
-              className="flex size-8 items-center justify-center rounded-full hover:bg-maroon-900/8"
-            >
-              <Plus className="size-4" />
-            </button>
+      {/* Quantity + total + reserve */}
+      <div className="mt-6 rounded-2xl border border-maroon-900/12 bg-cream-50 p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+              Quantity
+            </p>
+            <div className="mt-2 inline-flex items-center gap-3 rounded-full border border-maroon-900/15 bg-cream-100 px-2 py-1.5">
+              <button
+                type="button"
+                aria-label="Decrease quantity"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                className="grid size-8 place-items-center rounded-full hover:bg-maroon-900/8"
+              >
+                <Minus className="size-4" />
+              </button>
+              <span className="w-6 text-center font-bold tabular">{qty}</span>
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                onClick={() => setQty((q) => Math.min(6, q + 1))}
+                className="grid size-8 place-items-center rounded-full hover:bg-maroon-900/8"
+              >
+                <Plus className="size-4" />
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-text-muted">Max 6 per booking</p>
+
+          <div className="text-right">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+              Total
+            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-text-primary tabular sm:text-3xl">
+              {formatINR(total)}
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 sm:gap-6">
-          <p className="text-sm tabular">
-            <span className="text-text-muted">{qty} × {tier.name}</span>{' '}
-            <span className="font-bold text-text-primary"> = {formatINR(total)}</span>
-          </p>
-          <GoldButton
-            onClick={() => {
-              trackEvent('click_book_now', { slug: event.slug, tier: selected, qty, total });
-              onProceed(selected, qty);
-            }}
-          >
-            Reserve {tier.name}
-          </GoldButton>
-        </div>
+        <GoldButton
+          fullWidth
+          size="lg"
+          className="mt-4"
+          onClick={() => {
+            trackEvent('click_book_now', { slug: event.slug, tier: selected, qty, total });
+            onProceed(selected, qty);
+          }}
+        >
+          Reserve {tier.name} · {qty} {qty === 1 ? 'seat' : 'seats'}
+        </GoldButton>
       </div>
     </div>
   );
