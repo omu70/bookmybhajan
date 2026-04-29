@@ -12,6 +12,7 @@ import {
   Lock,
   MessageCircle,
   RotateCcw,
+  Flame,
 } from 'lucide-react';
 import { GoldButton } from '@/components/ui/GoldButton';
 import { TicketTiers } from '@/components/sections/TicketTiers';
@@ -28,18 +29,14 @@ interface EventDetailClientProps {
 }
 
 /**
- * EventDetail — minimal, devotional product page.
+ * EventDetail — mobile-first, Gen-Z punchy.
  *
- *   1. Hero — poster image + Hindi title + English title + facts
- *      (date · doors · venue · address) + book CTA
- *      Falling petals + diya garland animate over the hero (BhajanAmbience)
+ *   Mobile order:
+ *     poster → "selling fast" sticker → Hindi → English title → facts
+ *     → big CTA → urgency panel → tiers → zones → trust → sticky book bar
  *
- *   2. Tier picker — Silver / Gold / Diamond
- *      Sat alongside an AuditoriumZones visual that mirrors the picked tier
- *
- *   3. Trust strip + sticky bottom bar
- *
- * No invented content. Only the facts the brand actually has.
+ *   No invented content — only the brand's facts. But layout, weight and
+ *   copy lean confident, contemporary.
  */
 export function EventDetailClient({ event }: EventDetailClientProps) {
   const router = useRouter();
@@ -48,6 +45,9 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
 
   const minPrice = Math.min(...event.tiers.map((t) => t.price));
   const goldTier = event.tiers.find((t) => t.id === 'gold')!;
+  const totalRemaining = event.tiers.reduce((s, t) => s + t.seatsRemaining, 0);
+  const totalSeats = event.tiers.reduce((s, t) => s + t.totalSeats, 0);
+  const pctSold = Math.round(((totalSeats - totalRemaining) / totalSeats) * 100);
 
   useEffect(() => {
     trackEvent('view_event_detail', { slug: event.slug });
@@ -60,94 +60,106 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
 
   return (
     <>
-      {/* ═══ HERO ═══════════════════════════════════════════════ */}
+      {/* ═══ HERO ═══════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden">
-        {/* Atmospheric background — saffron radial glow */}
         <div className="absolute inset-0 -z-20 bg-hero-grad" />
+        <BhajanAmbience petalCount={14} garland />
 
-        {/* Falling petals + hanging diya garland */}
-        <BhajanAmbience petalCount={16} garland />
-
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 pb-12 pt-28 sm:px-6 sm:pt-32 lg:grid-cols-12 lg:gap-12 lg:px-8 lg:pb-20 lg:pt-40">
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-20 sm:px-6 sm:pb-16 sm:pt-28 lg:px-8 lg:pb-24 lg:pt-32">
           {/* Back link */}
-          <div className="lg:col-span-12">
-            <Link
-              href="/#shows"
-              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-saffron-700"
+          <Link
+            href="/#shows"
+            className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-text-muted hover:text-saffron-700"
+          >
+            <ArrowLeft className="size-3.5" /> All shows
+          </Link>
+
+          <div className="mt-5 grid grid-cols-1 gap-7 lg:grid-cols-12 lg:gap-10">
+            {/* POSTER */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+              className="lg:col-span-5"
             >
-              <ArrowLeft className="size-3.5" /> All shows
-            </Link>
-          </div>
+              <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-[28px] border border-maroon-900/15 bg-cream-200 shadow-card-hover">
+                <EventPoster event={event} className="h-full w-full" />
 
-          {/* LEFT — poster image */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
-            className="lg:col-span-5"
-          >
-            <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl border border-maroon-900/15 bg-cream-200 shadow-card-hover">
-              <EventPoster event={event} className="h-full w-full" />
-            </div>
-          </motion.div>
+                {/* "Selling fast" sticker — Gen-Z energy */}
+                <span className="absolute right-4 top-4 inline-flex -rotate-3 items-center gap-1.5 rounded-full bg-rose-500 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-cream-50">
+                  <Flame className="size-3" strokeWidth={2.6} />
+                  {pctSold}% sold
+                </span>
+              </div>
+            </motion.div>
 
-          {/* RIGHT — facts */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1], delay: 0.08 }}
-            className="lg:col-span-7"
-          >
-            <p className="eyebrow">Bookmybhajan presents</p>
+            {/* COPY + FACTS */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.06, ease: [0.2, 0.7, 0.2, 1] }}
+              className="lg:col-span-7"
+            >
+              {/* Hindi */}
+              {event.titleHindi && (
+                <p className="font-deva text-lg font-semibold text-maroon-700 sm:text-2xl">
+                  {event.titleHindi}
+                </p>
+              )}
 
-            {event.titleHindi && (
-              <p className="mt-4 font-deva text-xl font-semibold text-maroon-700 sm:text-2xl">
-                {event.titleHindi}
+              {/* H1 — bigger on mobile than before */}
+              <h1 className="mt-1 max-w-2xl font-display font-medium leading-[1.02] tracking-tight text-text-primary text-[34px] sm:text-h1 lg:text-h1-xl">
+                {event.title}
+              </h1>
+
+              {/* Inline tagline sticker */}
+              <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-text-primary px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-saffron-200">
+                Bhakti, on the beat ⚡
               </p>
-            )}
 
-            <h1 className="mt-1 max-w-2xl font-display font-medium leading-[1.05] tracking-tight text-text-primary text-h1-mobile sm:text-h1">
-              {event.title}
-            </h1>
+              {/* FACTS — 3 cols mobile */}
+              <div className="mt-7 grid grid-cols-3 gap-3 border-t border-maroon-900/12 pt-6 sm:gap-5">
+                <Fact Icon={Calendar} label="Date" value={shortDate(event.date)} />
+                <Fact Icon={Clock}    label="Doors" value={event.doorsOpen} sub={`Show ${event.startTime}`} />
+                <Fact Icon={MapPin}   label="City" value={event.city} sub={event.venue.split(',')[0]} />
+              </div>
 
-            {/* Facts grid — 2-col on mobile */}
-            <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-5 border-t border-maroon-900/10 pt-6 sm:grid-cols-3">
-              <Fact Icon={Calendar} label="Date" value={formatLongDate(event.date)} />
-              <Fact Icon={Clock}    label="Doors" value={`${event.doorsOpen} · Show ${event.startTime}`} />
-              <Fact Icon={MapPin}   label="Venue" value={`${event.venue}, ${event.city}`} className="col-span-2 sm:col-span-1" />
-            </div>
+              {/* CTA + price badge */}
+              <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                <GoldButton
+                  size="xl"
+                  fullWidth
+                  onClick={() => {
+                    trackEvent('click_book_now', { slug: event.slug, source: 'detail-hero' });
+                    document.querySelector('#tickets')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="sm:w-auto"
+                >
+                  Grab my seat — from {formatINR(minPrice)}
+                </GoldButton>
 
-            {/* Primary CTA */}
-            <div className="mt-8">
-              <GoldButton
-                size="xl"
-                fullWidth
-                onClick={() => {
-                  trackEvent('click_book_now', { slug: event.slug, source: 'detail-hero' });
-                  document.querySelector('#tickets')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="sm:w-auto"
-              >
-                Reserve from {formatINR(minPrice)}
-              </GoldButton>
-            </div>
+                <span className="inline-flex items-center justify-center gap-1.5 rounded-full border border-rose-500/40 bg-rose-50 px-3 py-2 text-[11px] font-extrabold uppercase tracking-widest text-rose-700">
+                  <Flame className="size-3" strokeWidth={2.6} /> Selling fast
+                </span>
+              </div>
 
-            <p className="mt-4 text-xs text-text-muted">
-              First-come-first-served seating inside each tier · Razorpay-secure checkout
-            </p>
+              <p className="mt-3 text-[11px] text-text-muted sm:text-xs">
+                FCFS seating inside each tier · Razorpay · WhatsApp ticket in 30 sec
+              </p>
 
-            {/* AGGRESSIVE URGENCY PANEL — countdown + scarcity + live activity */}
-            <div className="mt-8">
-              <BookingUrgencyPanel event={event} />
-            </div>
-          </motion.div>
+              {/* URGENCY PANEL */}
+              <div className="mt-6 sm:mt-8">
+                <BookingUrgencyPanel event={event} />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ═══ TIER PICKER + AUDITORIUM ═══════════════════════════ */}
+      {/* ═══ TIER PICKER + AUDITORIUM ═══════════════════════ */}
       <section
         id="tickets"
-        className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-12 lg:gap-12 lg:px-8"
+        className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12 lg:gap-12 lg:px-8"
       >
         <div className="lg:col-span-7">
           <TicketTiers
@@ -168,71 +180,89 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
         </aside>
       </section>
 
-      {/* ═══ TRUST + STICKY BOOK BAR ═════════════════════════════ */}
-      <section className="mx-auto max-w-3xl px-5 pb-20 sm:px-6">
-        <div className="grid grid-cols-2 gap-3 rounded-2xl border border-maroon-900/10 bg-cream-50 p-4 sm:grid-cols-3 sm:p-5">
-          <Trust Icon={Lock}            title="Secure"          sub="Razorpay · 256-bit SSL" />
-          <Trust Icon={MessageCircle}   title="WhatsApp ticket" sub="Sent in 30 seconds" />
-          <Trust Icon={RotateCcw}       title="Easy refunds"    sub="7 days before event" className="col-span-2 sm:col-span-1" />
+      {/* ═══ TRUST STRIP ════════════════════════════════════ */}
+      <section className="mx-auto max-w-3xl px-4 pb-28 sm:px-6 sm:pb-20">
+        <div className="grid grid-cols-1 gap-3 rounded-2xl border border-maroon-900/10 bg-cream-50 p-4 sm:grid-cols-3 sm:p-5">
+          <Trust Icon={Lock}          title="Secure"          sub="Razorpay · 256-bit SSL" />
+          <Trust Icon={MessageCircle} title="WhatsApp ticket" sub="Sent in 30 seconds" />
+          <Trust Icon={RotateCcw}     title="Easy refunds"    sub="Up to 7 days before" />
         </div>
       </section>
 
-      {/* Desktop sticky bottom bar */}
+      {/* DESKTOP sticky bar */}
       <div className="fixed inset-x-0 bottom-0 z-30 hidden border-t border-maroon-900/10 bg-cream-50/92 backdrop-blur-glass shadow-glass md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3 lg:px-8">
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-text-muted">Gold</span>
-            <span className="font-bold text-text-primary tabular">{formatINR(goldTier.price)}/seat</span>
+            <span className="text-text-muted">{activeTier.charAt(0).toUpperCase() + activeTier.slice(1)}</span>
+            <span className="font-bold text-text-primary tabular">
+              {formatINR(event.tiers.find((t) => t.id === activeTier)!.price)}/seat
+            </span>
             <span className="text-text-subtle">·</span>
-            <span className="text-text-muted">{goldTier.seatsRemaining} left</span>
+            <span className="text-rose-700 font-semibold">
+              {event.tiers.find((t) => t.id === activeTier)!.seatsRemaining} left
+            </span>
           </div>
           <GoldButton
             onClick={() => {
               trackEvent('click_book_now', { slug: event.slug, source: 'sticky' });
-              document.querySelector('#tickets')?.scrollIntoView({ behavior: 'smooth' });
+              router.push(`/checkout?event=${event.slug}&tier=${activeTier}&qty=1`);
             }}
           >
-            Book now
+            Grab my seat →
           </GoldButton>
         </div>
       </div>
 
-      {/* Mobile sticky bar */}
+      {/* MOBILE sticky bar */}
       <div className="fixed inset-x-0 bottom-0 z-30 px-3 pb-[env(safe-area-inset-bottom,0)] pt-2 md:hidden">
         <div className="pointer-events-none absolute inset-x-0 -top-6 h-6 bg-gradient-to-t from-cream-100 to-transparent" />
         <Link
           href={`/checkout?event=${event.slug}&tier=${activeTier}&qty=1`}
-          className="relative flex h-[56px] w-full items-center justify-between gap-2 rounded-2xl bg-gold-grad px-5 font-bold text-text-primary active:scale-[0.99]"
+          className="relative flex h-[58px] w-full items-center justify-between gap-2 rounded-2xl bg-text-primary px-4 font-bold text-cream-50 active:scale-[0.99]"
         >
           <span className="flex flex-col text-left leading-tight">
-            <span className="text-base">Book {activeTier.charAt(0).toUpperCase() + activeTier.slice(1)}</span>
-            <span className="text-xs font-medium opacity-80">From {formatINR(minPrice)}</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-widest opacity-70">
+              {activeTier.charAt(0).toUpperCase() + activeTier.slice(1)} · From {formatINR(minPrice)}
+            </span>
+            <span className="text-[15px]">Grab my seat →</span>
           </span>
-          <span className="text-lg">→</span>
+          <span className="grid size-9 place-items-center rounded-full bg-saffron-grad text-text-primary">
+            <ArrowLeft className="size-4 rotate-180" strokeWidth={2.6} />
+          </span>
         </Link>
       </div>
     </>
   );
 }
 
-// ─── small atoms ────────────────────────────────────────
+// ─── helpers ─────────────────────────────────────────────
+function shortDate(iso: string) {
+  const d = new Date(iso);
+  return d
+    .toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
+    .toUpperCase();
+}
+
 function Fact({
   Icon,
   label,
   value,
-  className = '',
+  sub,
 }: {
   Icon: any;
   label: string;
   value: string;
-  className?: string;
+  sub?: string;
 }) {
   return (
-    <div className={className}>
-      <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+    <div>
+      <p className="flex items-center gap-1 text-[9px] font-extrabold uppercase tracking-widest text-text-muted">
         <Icon className="size-3 text-saffron-600" /> {label}
       </p>
-      <p className="mt-1 text-sm font-semibold leading-snug text-text-primary">{value}</p>
+      <p className="mt-1 font-display text-lg font-semibold leading-[1.1] text-text-primary sm:text-xl">
+        {value}
+      </p>
+      {sub && <p className="mt-0.5 text-[11px] text-text-muted">{sub}</p>}
     </div>
   );
 }
@@ -241,16 +271,14 @@ function Trust({
   Icon,
   title,
   sub,
-  className = '',
 }: {
   Icon: any;
   title: string;
   sub: string;
-  className?: string;
 }) {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-saffron-50 text-saffron-700">
+    <div className="flex items-center gap-3">
+      <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-saffron-50 text-saffron-700">
         <Icon className="size-4" strokeWidth={2.4} />
       </div>
       <div>

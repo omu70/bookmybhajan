@@ -2,7 +2,6 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { VideoMarquee } from '@/components/sections/VideoMarquee';
 import { WhyBhajanClubbing } from '@/components/sections/WhyBhajanClubbing';
 import { InsideTheNight } from '@/components/sections/InsideTheNight';
-import { LightADiya } from '@/components/sections/LightADiya';
 import { EventGrid } from '@/components/sections/EventGrid';
 import { DevoteeVoices } from '@/components/sections/DevoteeVoices';
 import { MandalaDivider } from '@/components/ui/MandalaDivider';
@@ -31,7 +30,6 @@ export default function HomePage() {
       <WhyBhajanClubbing />
       <MandalaDivider />
       <InsideTheNight />
-      <LightADiya />
       <MandalaDivider />
       <EventGrid
         events={EVENTS}
