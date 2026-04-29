@@ -83,7 +83,6 @@
     backdrop-filter: blur(8px) saturate(160%);
     -webkit-backdrop-filter: blur(8px) saturate(160%);
     border: 1px solid rgba(201, 146, 26, 0.45);
-    box-shadow: 0 8px 28px -6px rgba(201, 146, 26, 0.30);
   }
 
   .glass-saffron {
@@ -93,31 +92,28 @@
     border: 1px solid rgba(255, 122, 26, 0.45);
   }
 
-  /* Primary CTA — temple gold gradient */
+  /* Primary CTA — temple gold gradient. Neutral elevation only. */
   .btn-gold {
     @apply relative inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-wide;
     background: linear-gradient(135deg, #f4d069 0%, #c9921a 50%, #a87810 100%);
     color: #1f0a13;
     padding: 14px 26px;
-    box-shadow: 0 10px 28px -6px rgba(201, 146, 26, 0.55),
-                inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    box-shadow: 0 6px 18px -8px rgba(31, 10, 19, 0.30);
     transition: transform 150ms ease, box-shadow 200ms ease;
   }
   .btn-gold:hover {
     transform: translateY(-1px);
-    box-shadow: 0 16px 36px -6px rgba(201, 146, 26, 0.7),
-                inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    box-shadow: 0 10px 22px -8px rgba(31, 10, 19, 0.35);
   }
   .btn-gold:active { transform: translateY(0); }
 
-  /* Saffron CTA — for hero / strongest moments */
+  /* Saffron CTA — for hero / strongest moments. Neutral elevation. */
   .btn-saffron {
     @apply relative inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-wide;
     background: linear-gradient(135deg, #ffae57 0%, #ff7a1a 50%, #c0440c 100%);
     color: #fff;
     padding: 14px 26px;
-    box-shadow: 0 12px 32px -8px rgba(255, 107, 26, 0.55),
-                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    box-shadow: 0 6px 18px -8px rgba(31, 10, 19, 0.30);
   }
 
   .btn-ghost {

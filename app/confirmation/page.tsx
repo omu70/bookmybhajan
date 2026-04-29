@@ -70,7 +70,7 @@ function ConfirmationInner() {
         >
           <span className="relative inline-flex">
             <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />
-            <span className="relative inline-flex size-20 items-center justify-center rounded-full bg-gold-grad text-ink-900 shadow-gold-glow-lg">
+            <span className="relative inline-flex size-20 items-center justify-center rounded-full bg-gold-grad text-ink-900">
               <CheckCircle2 className="size-10" strokeWidth={2} />
             </span>
           </span>

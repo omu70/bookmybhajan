@@ -32,7 +32,7 @@ export function Logo({ size = 'md', className, iconOnly }: LogoProps) {
     <span className={cn('inline-flex items-center gap-2.5 leading-none', className)}>
       <span
         className={cn(
-          'grid place-items-center bg-saffron-grad shadow-saffron-glow/40',
+          'grid place-items-center bg-saffron-grad',
           s.tile
         )}
         aria-hidden

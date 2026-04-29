@@ -29,7 +29,7 @@ export function StickyMobileCTA({ href, fromPrice, label }: StickyMobileCTAProps
 
       <Link
         href={href}
-        className="relative flex h-[56px] w-full items-center justify-between gap-2 rounded-2xl bg-gold-grad px-5 font-bold text-ink-900 shadow-gold-glow-lg active:scale-[0.99]"
+        className="relative flex h-[56px] w-full items-center justify-between gap-2 rounded-2xl bg-gold-grad px-5 font-bold text-ink-900 active:scale-[0.99]"
       >
         <span className="flex flex-col text-left leading-tight">
           <span className="text-base">{label ?? 'Book Now'}</span>

@@ -310,7 +310,7 @@ function CheckoutInner() {
                     className={cn(
                       'rounded-2xl border p-3 text-left transition-all',
                       paymentMethod === m.id
-                        ? 'border-saffron-500 bg-saffron-50 shadow-saffron-glow'
+                        ? 'border-saffron-500 bg-saffron-50'
                         : 'border-maroon-900/15 bg-cream-50 hover:border-saffron-500/40'
                     )}
                   >

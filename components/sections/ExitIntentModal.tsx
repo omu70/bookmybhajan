@@ -67,7 +67,7 @@ export function ExitIntentModal() {
               <X className="size-4" />
             </button>
 
-            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-grad text-ink-900 shadow-gold-glow-lg">
+            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-grad text-ink-900">
               <Gift className="size-7" strokeWidth={2} />
             </span>
 

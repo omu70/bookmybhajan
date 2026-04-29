@@ -73,12 +73,12 @@ export function TicketTiers({ event, onProceed, onTierChange, value }: TicketTie
               className={cn(
                 'relative w-full rounded-2xl border p-4 text-left transition-all sm:p-5',
                 isSelected
-                  ? 'border-saffron-500/70 bg-saffron-50 shadow-saffron-glow'
+                  ? 'border-saffron-500/70 bg-saffron-50'
                   : 'border-maroon-900/12 bg-cream-50 hover:border-saffron-500/40'
               )}
             >
               {t.popular && (
-                <span className="absolute -top-2.5 left-4 inline-flex items-center gap-1 rounded-full bg-gold-grad px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-text-primary shadow-gold-glow-lg">
+                <span className="absolute -top-2.5 left-4 inline-flex items-center gap-1 rounded-full bg-gold-grad px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-text-primary">
                   <Star className="size-2.5 fill-text-primary" /> POPULAR
                 </span>
               )}

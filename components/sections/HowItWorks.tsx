@@ -64,7 +64,7 @@ export function HowItWorks() {
               <span className="font-display text-5xl font-bold text-saffron-500/30">
                 {s.n}
               </span>
-              <span className="flex size-12 items-center justify-center rounded-full bg-gold-grad text-text-primary shadow-gold-glow-lg">
+              <span className="flex size-12 items-center justify-center rounded-full bg-gold-grad text-text-primary">
                 <s.Icon className="size-5" strokeWidth={2.2} />
               </span>
             </div>

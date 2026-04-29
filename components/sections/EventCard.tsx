@@ -50,7 +50,7 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
         <Link
           href={checkoutHref}
           aria-label={`Book ${event.title} now`}
-          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-text-primary px-3.5 py-1.5 text-[11px] font-bold text-cream-50 transition-all hover:bg-saffron-grad hover:text-text-primary hover:shadow-saffron-glow sm:px-4 sm:py-2 sm:text-xs"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-text-primary px-3.5 py-1.5 text-[11px] font-bold text-cream-50 transition-all hover:bg-saffron-grad hover:text-text-primary sm:px-4 sm:py-2 sm:text-xs"
         >
           Book
           <ArrowRight className="size-3 sm:size-3.5" strokeWidth={2.6} />

@@ -107,7 +107,7 @@ export function SeatingMap({
                   'aspect-square rounded-md text-[10px] font-semibold transition-all',
                   !s.available && 'cursor-not-allowed bg-white/5 text-text-subtle line-through',
                   s.available && !isSelected && 'bg-white/10 text-text-primary hover:bg-gold/30',
-                  isSelected && 'bg-gold text-ink-900 ring-2 ring-gold shadow-gold-glow-lg'
+                  isSelected && 'bg-gold text-ink-900 ring-2 ring-gold'
                 )}
               >
                 {s.col + 1}

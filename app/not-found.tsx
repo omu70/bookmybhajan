@@ -10,7 +10,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/events"
-        className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold-grad px-5 py-2.5 text-sm font-bold text-text-primary shadow-gold-glow-lg"
+        className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold-grad px-5 py-2.5 text-sm font-bold text-text-primary"
       >
         Browse Bhajan Clubbing nights →
       </Link>

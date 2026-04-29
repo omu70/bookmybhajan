@@ -28,7 +28,7 @@ const sizeMap: Record<Size, string> = {
  */
 export const GoldButton = forwardRef<HTMLButtonElement, GoldButtonProps>(
   function GoldButton(
-    { variant = 'gold', size = 'lg', pulse = true, withArrow = true, fullWidth, className, children, ...rest },
+    { variant = 'gold', size = 'lg', pulse = false, withArrow = true, fullWidth, className, children, ...rest },
     ref
   ) {
     const base =
@@ -42,7 +42,6 @@ export const GoldButton = forwardRef<HTMLButtonElement, GoldButtonProps>(
           base,
           sizeMap[size],
           fullWidth && 'w-full',
-          variant === 'gold' && pulse && 'animate-gold-pulse',
           'group',
           className
         )}

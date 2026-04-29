@@ -54,7 +54,7 @@ export function PastEventsGallery({ videos, galleryImages }: PastEventsGalleryPr
             />
             <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/85 via-maroon-900/25 to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="flex size-16 items-center justify-center rounded-full bg-gold/95 text-ink-900 shadow-gold-glow-lg transition-transform group-hover:scale-110">
+              <span className="flex size-16 items-center justify-center rounded-full bg-gold/95 text-ink-900 transition-transform group-hover:scale-110">
                 <Play className="ml-1 size-7 fill-ink-900" />
               </span>
             </div>

@@ -138,26 +138,18 @@ module.exports = {
       },
 
       boxShadow: {
-        'gold-glow':     '0 0 0 0 rgba(201,146,26,0.55)',
-        'gold-glow-lg':  '0 8px 28px -6px rgba(201,146,26,0.45)',
-        'saffron-glow':  '0 12px 36px -8px rgba(255,107,26,0.55)',
-        glass:           '0 12px 40px -12px rgba(122,42,63,0.18)',
-        'card-hover':    '0 24px 56px -18px rgba(255,107,26,0.30), 0 10px 22px -10px rgba(122,42,63,0.18)',
+        // Neutral, non-glowy elevations
+        glass:        '0 8px 28px -12px rgba(31,10,19,0.14)',
+        'card-hover': '0 14px 32px -16px rgba(31,10,19,0.20)',
       },
 
       animation: {
-        'gold-pulse':     'goldPulse 2s ease-in-out infinite',
-        'ticker':         'ticker 38s linear infinite',
-        'flame-flicker':  'flameFlicker 1.6s ease-in-out infinite',
-        'shine':          'shine 2.4s ease-in-out infinite',
-        'float-slow':     'floatSlow 6s ease-in-out infinite',
+        'ticker':        'ticker 38s linear infinite',
+        'flame-flicker': 'flameFlicker 1.6s ease-in-out infinite',
+        'float-slow':    'floatSlow 6s ease-in-out infinite',
       },
 
       keyframes: {
-        goldPulse: {
-          '0%, 100%': { boxShadow: '0 0 0 0 rgba(201,146,26,0.55)' },
-          '50%':      { boxShadow: '0 0 0 14px rgba(201,146,26,0)' },
-        },
         ticker: {
           '0%':   { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
@@ -165,10 +157,6 @@ module.exports = {
         flameFlicker: {
           '0%, 100%': { opacity: '0.92', transform: 'scale(1)' },
           '50%':      { opacity: '1',    transform: 'scale(1.06)' },
-        },
-        shine: {
-          '0%':   { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
         },
         floatSlow: {
           '0%, 100%': { transform: 'translateY(0)' },

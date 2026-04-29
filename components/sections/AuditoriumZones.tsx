@@ -173,7 +173,7 @@ export function AuditoriumZones({
               className={cn(
                 'group flex items-center gap-3 rounded-xl border p-3 text-left transition-all',
                 isActive
-                  ? 'border-saffron-500/60 bg-saffron-50 shadow-gold-glow-lg'
+                  ? 'border-saffron-500/60 bg-saffron-50'
                   : 'border-maroon-900/12 bg-cream-50 hover:border-saffron-500/40'
               )}
             >

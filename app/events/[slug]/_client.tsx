@@ -196,7 +196,7 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
         <div className="pointer-events-none absolute inset-x-0 -top-6 h-6 bg-gradient-to-t from-cream-100 to-transparent" />
         <Link
           href={`/checkout?event=${event.slug}&tier=${activeTier}&qty=1`}
-          className="relative flex h-[56px] w-full items-center justify-between gap-2 rounded-2xl bg-gold-grad px-5 font-bold text-text-primary shadow-gold-glow-lg active:scale-[0.99]"
+          className="relative flex h-[56px] w-full items-center justify-between gap-2 rounded-2xl bg-gold-grad px-5 font-bold text-text-primary active:scale-[0.99]"
         >
           <span className="flex flex-col text-left leading-tight">
             <span className="text-base">Book {activeTier.charAt(0).toUpperCase() + activeTier.slice(1)}</span>
