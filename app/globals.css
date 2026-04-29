@@ -26,6 +26,8 @@
 
   body {
     @apply text-text-primary font-sans;
+    font-size: 16px;
+    line-height: 1.55;
     background-image:
       radial-gradient(1200px 700px at 80% -10%, rgba(255, 122, 26, 0.22) 0%, transparent 60%),
       radial-gradient(900px 600px at -10% 25%,  rgba(244, 185, 66, 0.28) 0%, transparent 60%),
@@ -33,6 +35,17 @@
       linear-gradient(180deg, #fff5e3 0%, #fdebcc 60%, #fadeb0 100%);
     background-attachment: fixed;
     overflow-x: hidden;
+  }
+
+  /* Display headlines — Fraunces with optical sizing for big sizes */
+  h1, h2, .font-display {
+    font-feature-settings: "ss01", "ss02";
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+  }
+
+  /* Tighter optical-size for smaller display text */
+  h3, h4 {
+    font-variation-settings: "opsz" 36, "SOFT" 50;
   }
 
   /* Selection in saffron — devotional warmth */
@@ -153,10 +166,11 @@
     animation: shine 2.4s ease-in-out infinite;
   }
 
-  /* Eyebrow text */
+  /* Eyebrow text — small caps style */
   .eyebrow {
-    @apply text-eyebrow uppercase font-bold;
-    color: #9b3a52;
+    @apply text-eyebrow uppercase;
+    font-weight: 700;
+    color: #7a2a3f;
   }
 
   /* Saffron gradient text — used sparingly, never on long copy */

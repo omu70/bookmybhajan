@@ -92,16 +92,17 @@ module.exports = {
       },
 
       fontFamily: {
-        display: ['var(--font-cormorant)', 'serif'],
-        sans:    ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        deva:    ['var(--font-tiro)', 'serif'],
+        display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif'],
+        sans:    ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        deva:    ['var(--font-deva)', 'var(--font-sans)', 'sans-serif'],
       },
 
       fontSize: {
-        eyebrow:    ['12px', { lineHeight: '16px', letterSpacing: '0.18em' }],
-        'h1-mobile':['40px', { lineHeight: '1.04', letterSpacing: '-0.02em' }],
-        h1:         ['64px', { lineHeight: '1.0',  letterSpacing: '-0.025em' }],
-        'h1-xl':    ['88px', { lineHeight: '0.96', letterSpacing: '-0.03em' }],
+        // Mobile-first — sized for 375px viewports, scales up
+        eyebrow:    ['11px', { lineHeight: '14px', letterSpacing: '0.20em' }],
+        'h1-mobile':['34px', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
+        h1:         ['56px', { lineHeight: '1.02', letterSpacing: '-0.025em' }],
+        'h1-xl':    ['80px', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
       },
 
       backdropBlur: {

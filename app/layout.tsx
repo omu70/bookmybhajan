@@ -1,33 +1,38 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Cormorant_Garamond, Tiro_Devanagari_Hindi } from 'next/font/google';
+import { Manrope, Fraunces, Hind } from 'next/font/google';
 import Script from 'next/script';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import './globals.css';
 
-// ─── Fonts ─ subset to required scripts only ──────────────
-const inter = Inter({
+// ─── Fonts — contemporary, mobile-readable, devotional warmth ────────
+//
+// Manrope:  modern geometric sans — body + UI. Variable, very legible at 14–18px.
+// Fraunces: friendly modern serif — display headlines, hero, sections. Has personality.
+// Hind:     clean Devanagari — Hindi accent runs.
+const sans = Manrope({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
   preload: true,
 });
 
-const cormorant = Cormorant_Garamond({
+const display = Fraunces({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
   display: 'swap',
-  variable: '--font-cormorant',
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800', '900'],
+  axes: ['SOFT', 'opsz'],
   preload: true,
 });
 
-const tiro = Tiro_Devanagari_Hindi({
+const deva = Hind({
   subsets: ['devanagari'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
   display: 'swap',
-  variable: '--font-tiro',
-  preload: false, // accent only
+  variable: '--font-deva',
+  weight: ['400', '500', '600', '700'],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -58,7 +63,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable} ${tiro.variable}`}>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${deva.variable}`}>
       <head>
         {/* GTM container slot — single script, all tags managed inside */}
         {process.env.NEXT_PUBLIC_GTM_ID && (

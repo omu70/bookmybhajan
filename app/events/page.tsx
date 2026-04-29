@@ -8,7 +8,7 @@ import { EVENTS } from '@/lib/events';
 import { ChevronDown, Loader2, MapPin, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const CITIES = ['All', 'Mumbai', 'Pune', 'Ahmedabad', 'Surat', 'Delhi', 'Bangalore'] as const;
+const CITIES = ['All', 'Mumbai', 'Pune', 'Ahmedabad', 'Surat', 'Bangalore'] as const;
 const SORTS = [
   { id: 'soon', label: 'Happening soon' },
   { id: 'popular', label: 'Most popular' },
@@ -58,13 +58,12 @@ function EventListingInner() {
     <div className="pt-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <p className="eyebrow">All Bhajan Clubbing nights</p>
-          <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">
+          <p className="eyebrow">All shows</p>
+          <h1 className="mt-3 font-display text-4xl font-medium tracking-tight sm:text-5xl">
             Find your night.
           </h1>
-          <p className="mt-2 max-w-2xl text-text-muted">
-            6 cities. 6 Saturdays. The Fusion Albela Band live in your city.
-            Filter by city, sort by what&apos;s next, book in 60 seconds.
+          <p className="mt-3 max-w-2xl text-text-muted">
+            5 cities. The Fusion Albela Band live. Pick yours.
           </p>
         </header>
       </div>
